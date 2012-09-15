@@ -1,0 +1,16 @@
+GET     /                              controllers.Application.index()
+GET     /settings                      controllers.Application.settings()
+
+GET     /test/upload                    controllers.Application.testUpload()
+
+#GET     /s3/:bucket/:filename           controllers.S3.getFile(bucket: String, filename: String)
+POST    /s3/:bucket/:preset           controllers.S3.create(bucket: String, preset: String)
+#PUT     /s3/:bucket/:filename           controllers.S3.update(bucket: String, filename: String)
+
+#DELETE  /s3/:bucket/:filename           controllers.S3.delete(bucket: String, filename: String)
+#GET     /s3/:bucket/:filename/delete    controllers.S3.delete(bucket: String, filename: String)
+
+
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+

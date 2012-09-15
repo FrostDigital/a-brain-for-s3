@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="org.imgscalr_imgscalr-lib_4.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/playframework/play-2.0.3/repository/cache/org.imgscalr/imgscalr-lib/jars/imgscalr-lib-4.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
