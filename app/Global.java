@@ -4,6 +4,8 @@ import play.Application;
 import play.GlobalSettings;
 import play.Logger;
 
+import java.io.File;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Joel Soderstrom (joel[at]frostdigital[dot]se)
@@ -34,6 +36,6 @@ public class Global extends GlobalSettings {
      */
     private void loadBrainConf(String location) {
         Logger.info("Loading brain.conf from: " + location);
-        ConfigParser.parseConfig( ConfigFactory.load(location) );
+        ConfigParser.parseConfig( ConfigFactory.parseFileAnySyntax(new File(location)));
     }
 }
