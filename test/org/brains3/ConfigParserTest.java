@@ -35,7 +35,6 @@ public class ConfigParserTest extends BaseIntegrationTest {
         Bucket myBucket = Bucket.getBucket("my-bucket");
 
         assertThat(myBucket).isNotNull();
-        assertThat(myBucket.cache).isTrue();
         assertThat(myBucket.key).isEqualTo("BKIAIA6BXQ7U72DQLYRQ");
         assertThat(myBucket.secret).isEqualTo("nVoRnbUHhyhIjTfRY5mQ+onwf9zvlMEwUANxGr5Y");
         assertThat(myBucket.name).isEqualTo("my-bucket");

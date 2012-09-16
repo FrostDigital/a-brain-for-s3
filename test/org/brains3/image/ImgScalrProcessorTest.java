@@ -19,7 +19,7 @@ public class ImgScalrProcessorTest {
     private ImageProcessor processor = new ImgScalrProcessor();
 
     @Test
-    public void testProcess_jpg() throws Exception {
+    public void testProcess_JPGtoJPG() throws Exception {
         // GIVEN
         File img = readTestImage("./test/large.jpg");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
@@ -38,7 +38,7 @@ public class ImgScalrProcessorTest {
     }
 
     @Test
-    public void testProcess_png() throws Exception {
+    public void testProcess_JPGtoPNG() throws Exception {
         // GIVEN
         File img = readTestImage("./test/large.jpg");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
@@ -57,7 +57,7 @@ public class ImgScalrProcessorTest {
 
     @Test
     @Ignore
-    public void testProcess_bmp() throws Exception {
+    public void testProcess_JPGtoBMP() throws Exception {
         // GIVEN
         File img = readTestImage("./test/large.jpg");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
@@ -76,7 +76,7 @@ public class ImgScalrProcessorTest {
 
     @Test
     @Ignore
-    public void testProcess_gif() throws Exception {
+    public void testProcess_JPGtoGIF() throws Exception {
         // GIVEN
         File img = readTestImage("./test/large.jpg");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
@@ -95,7 +95,7 @@ public class ImgScalrProcessorTest {
 
     @Test
     @Ignore
-    public void testProcess_tiff() throws Exception {
+    public void testProcess_JPGtoTIF() throws Exception {
         // GIVEN
         File img = readTestImage("./test/large.jpg");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
@@ -111,6 +111,25 @@ public class ImgScalrProcessorTest {
 
         openImage(processedImage.image.getAbsolutePath());
     }
+
+    @Test
+    public void testProcess_PNGtoJPG() throws Exception {
+        // GIVEN
+        File img = readTestImage("./test/medium.PNG");
+        Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
+                FilenameGenerator.UID, FileFormat.PNG, 100);
+        ProcessedImage processedImage = new ProcessedImage(preset, img.getName());
+
+        // WHEN
+        processedImage = processor.process(processedImage, img);
+
+        // THEN
+        assertNotNull(processedImage);
+        assertTrue(processedImage.image.exists());
+
+        openImage(processedImage.image.getAbsolutePath());
+    }
+
 
     public void openImage(String absolutePath) throws Exception {
         Runtime r = Runtime.getRuntime();
