@@ -8,3 +8,4 @@ dist
 .idea
 .idea_modules
 .settings
+RUNNING_PID
