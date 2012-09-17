@@ -131,9 +131,27 @@ public class ImgScalrProcessorTest {
     }
 
     @Test
-    public void testProcess_PNGAlphatoJPG() throws Exception {
+    public void testProcess_PNGAlphaToJPG() throws Exception {
         // GIVEN
         File img = readTestImage("./test/alpha.png");
+        Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
+                FilenameGenerator.UID, FileFormat.PNG, 100);
+        ProcessedImage processedImage = new ProcessedImage(preset, img.getName());
+
+        // WHEN
+        processedImage = processor.process(processedImage, img);
+
+        // THEN
+        assertNotNull(processedImage);
+        assertTrue(processedImage.image.exists());
+
+        openImage(processedImage.image.getAbsolutePath());
+    }
+
+    @Test
+    public void testProcess_PNGAlphaToJPG2() throws Exception {
+        // GIVEN
+        File img = readTestImage("./test/alpha2.png");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
                 FilenameGenerator.UID, FileFormat.PNG, 100);
         ProcessedImage processedImage = new ProcessedImage(preset, img.getName());

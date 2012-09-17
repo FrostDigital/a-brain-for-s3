@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.FileImageOutputStream;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -30,12 +31,25 @@ public class ImgScalrProcessor implements ImageProcessor {
 
         if(isPNG(processedImage.originalFilename)) {
             // Perform PNG -> JPG alpha fix
-            // http://java-program.developerfaqs.com/q_java-programming_175538.html
+            // https://github.com/thebuzzmedia/imgscalr/issues/59#issuecomment-3743920
 
             BufferedImage tmpImg = ImageIO.read(image);
-            img = new BufferedImage (tmpImg.getWidth(), tmpImg.getHeight(), BufferedImage.TYPE_INT_RGB);
-            img = tmpImg.getSubimage(0, 0, img.getWidth(), img.getHeight());
-            tmpImg.flush();
+
+            if(tmpImg.getColorModel().hasAlpha()) {
+                img = new BufferedImage (tmpImg.getWidth(), tmpImg.getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+                Graphics g = img.getGraphics();
+
+                g.drawImage(tmpImg, 0, 0, null);
+                g.dispose();
+
+                img.setData(tmpImg.getData());
+                tmpImg.flush();
+            }
+            else {
+                img = tmpImg;
+            }
+
         }
         else {
             img = ImageIO.read(image);
