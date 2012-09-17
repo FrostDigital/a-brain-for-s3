@@ -36,9 +36,10 @@ public class ImgScalrProcessor implements ImageProcessor {
 
             BufferedImage tmpImg = ImageIO.read(image);
 
-            Logger.warn("PNG file:\n" + tmpImg.toString());
-            Logger.warn("PNG file color model:\n" + tmpImg.getColorModel().toString());
-
+            Logger.debug("----------------\n"
+                    + tmpImg.toString()
+                    + "\n" + tmpImg.getColorModel().toString()
+                    + "\n----------------");
 
             if(tmpImg.getColorModel().hasAlpha()) {
                 img = new BufferedImage (tmpImg.getWidth(), tmpImg.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -48,7 +49,7 @@ public class ImgScalrProcessor implements ImageProcessor {
                 g.drawImage(tmpImg, 0, 0, null);
                 g.dispose();
 
-                img.setData(tmpImg.getData());
+                //img.setData(tmpImg.getData());
                 tmpImg.flush();
             }
             else {
