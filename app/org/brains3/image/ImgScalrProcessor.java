@@ -42,7 +42,7 @@ public class ImgScalrProcessor implements ImageProcessor {
                     + "\n----------------");
 
             if(tmpImg.getColorModel().hasAlpha()) {
-                img = new BufferedImage (tmpImg.getWidth(), tmpImg.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                img = new BufferedImage (tmpImg.getWidth(), tmpImg.getHeight(), BufferedImage.TYPE_INT_RGB);
 
                 Graphics g = img.getGraphics();
 
