@@ -26,10 +26,20 @@ public class ImgScalrProcessor implements ImageProcessor {
 
     @Override
     public ProcessedImage process(ProcessedImage processedImage, File image) throws IOException {
-        BufferedImage img = ImageIO.read(image);
+        BufferedImage img = null;
 
-        int currentWidth = img.getWidth();
-        int currentHeight = img.getHeight();
+        if(isPNG(processedImage.originalFilename)) {
+            // Perform PNG -> JPG alpha fix
+            // http://java-program.developerfaqs.com/q_java-programming_175538.html
+
+            BufferedImage tmpImg = ImageIO.read(image);
+            img = new BufferedImage (tmpImg.getWidth(), tmpImg.getHeight(), BufferedImage.TYPE_INT_RGB);
+            img = tmpImg.getSubimage(0, 0, img.getWidth(), img.getHeight());
+            tmpImg.flush();
+        }
+        else {
+            img = ImageIO.read(image);
+        }
 
         img = resize(img, getScalrMethod(processedImage.preset), processedImage.preset.width, processedImage.preset.height);
 
@@ -41,20 +51,19 @@ public class ImgScalrProcessor implements ImageProcessor {
     }
 
     private File write(BufferedImage img, Preset preset) {
-        ImageWriter writer = getImageWriter(preset.format.name());
-        ImageWriteParam iwp = setCompressionLevel(writer, preset);
-
         File file = null;
 
         try {
+            ImageWriter writer = getImageWriter(preset.format.name());
+            ImageWriteParam iwp = setCompressionLevel(writer, preset);
+
             file = File.createTempFile("brains3_", "." + preset.format.name().toLowerCase());
             FileImageOutputStream output = new FileImageOutputStream(file);
+
             writer.setOutput(output);
-            IIOImage image = new IIOImage(img, null, null);
-            writer.write(null, image, iwp);
+            writer.write(null, new IIOImage(img, null, null), iwp);
             writer.dispose();
             img.flush();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -96,5 +105,9 @@ public class ImgScalrProcessor implements ImageProcessor {
         }
 
         return method;
+    }
+
+    private boolean isPNG(String filename) {
+        return filename.toLowerCase().endsWith(".png");
     }
 }

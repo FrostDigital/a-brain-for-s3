@@ -10,7 +10,7 @@ object ApplicationBuild extends Build {
     val appDependencies = Seq(
       "org.imgscalr" % "imgscalr-lib" % "4.2",
       "com.amazonaws" % "aws-java-sdk" % "1.3.14"
-     // "javax.media.jai" % "com.springsource.javax.media.jai.core" % "1.1.3"
+      //"javax.media.jai" % "com.springsource.javax.media.jai.core" % "1.1.3"
     )
 
     val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
