@@ -3,6 +3,7 @@ package org.brains3.image;
 import org.brains3.Preset;
 import org.brains3.ProcessedImage;
 import org.imgscalr.Scalr;
+import play.Logger;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -34,6 +35,10 @@ public class ImgScalrProcessor implements ImageProcessor {
             // https://github.com/thebuzzmedia/imgscalr/issues/59#issuecomment-3743920
 
             BufferedImage tmpImg = ImageIO.read(image);
+
+            Logger.warn("PNG file:\n" + tmpImg.toString());
+            Logger.warn("PNG file color model:\n" + tmpImg.getColorModel().toString());
+
 
             if(tmpImg.getColorModel().hasAlpha()) {
                 img = new BufferedImage (tmpImg.getWidth(), tmpImg.getHeight(), BufferedImage.TYPE_INT_ARGB);
