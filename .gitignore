@@ -9,3 +9,4 @@ dist
 .idea_modules
 .settings
 RUNNING_PID
+test/jmx
