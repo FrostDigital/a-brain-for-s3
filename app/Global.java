@@ -1,3 +1,4 @@
+import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import org.brains3.ConfigParser;
 import play.Application;
@@ -5,6 +6,8 @@ import play.GlobalSettings;
 import play.Logger;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,13 +23,14 @@ public class Global extends GlobalSettings {
             return;
         }
 
-        String brainConfLocation = app.configuration().getString("brain-conf");
+        //String brainConfLocation = app.configuration().getString("brain-conf");
 
-        if(brainConfLocation == null || brainConfLocation.isEmpty()) {
+        /*if(brainConfLocation == null || brainConfLocation.isEmpty()) {
             Logger.warn("No brain configuration was loaded, is 'brain-conf' set?");
-        } else {
-            loadBrainConf(brainConfLocation);
-        }
+        } else {*/
+            //loadBrainConf(brainConfLocation);
+            ConfigParser.parseConfig(play.api.Play.unsafeApplication().configuration().underlying());
+        //}
 
     }
 
@@ -36,6 +40,27 @@ public class Global extends GlobalSettings {
      */
     private void loadBrainConf(String location) {
         Logger.info("Loading brain.conf from: " + location);
-        ConfigParser.parseConfig( ConfigFactory.parseFileAnySyntax(new File(location)));
+
+        // TODO: This is probably already solved more elegantly
+        // somewhere in Typesafe Config lib
+
+        String path = location;
+        Config config = null;
+
+        if(location.startsWith("http://")) {
+            try {
+                config = ConfigFactory.parseURL(new URL(location));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
+        else if(!location.startsWith("/")) {
+            config = ConfigFactory.parseResources(location);
+        }
+        else {
+            config = ConfigFactory.parseFile(new File(location));
+        }
+
+        //ConfigParser.parseConfig(config);
     }
 }

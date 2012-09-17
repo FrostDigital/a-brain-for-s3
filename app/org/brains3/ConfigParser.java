@@ -16,7 +16,6 @@ public class ConfigParser {
     private static final String BUCKETS_KEY = "buckets";
 
     public static void parseConfig(Config config) {
-        System.out.println(config);
         parseBuckets(config.getConfig(BUCKETS_KEY));
         parsePresets(config.getConfig(PRESETS_KEY));
     }

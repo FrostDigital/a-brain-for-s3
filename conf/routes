@@ -1,7 +1,8 @@
 GET     /                              controllers.Application.index()
 GET     /settings                      controllers.Application.settings()
 
-GET     /test/upload                    controllers.Application.testUpload()
+GET     /test                           controllers.Application.testUpload()
+GET     /test/:bucket/:preset           controllers.Application.testBucketAndPreset(bucket: String, preset: String)
 
 #GET     /s3/:bucket/:filename           controllers.S3.getFile(bucket: String, filename: String)
 POST    /s3/:bucket/:preset           controllers.S3.create(bucket: String, preset: String)

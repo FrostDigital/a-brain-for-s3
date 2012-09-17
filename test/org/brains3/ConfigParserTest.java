@@ -1,6 +1,7 @@
 package org.brains3;
 
 import com.typesafe.config.ConfigFactory;
+import org.junit.Test;
 
 import java.io.File;
 
@@ -15,10 +16,9 @@ import static org.fest.assertions.Assertions.assertThat;
  */
 public class ConfigParserTest extends BaseIntegrationTest {
 
+    @Test
     public void testParseConfig() throws Exception {
-        ConfigParser.parseConfig(
-            ConfigFactory.parseFile(new File("test/test-conf.conf"))
-        );
+        ConfigParser.parseConfig(ConfigFactory.parseFile(new File("test/test-conf.conf")));
 
         Preset thumbPreset = Preset.getPreset("thumb");
 
@@ -31,13 +31,13 @@ public class ConfigParserTest extends BaseIntegrationTest {
         assertThat(thumbPreset.height).isEqualTo(100);
 
 
-
         Bucket myBucket = Bucket.getBucket("my-bucket");
 
         assertThat(myBucket).isNotNull();
-        assertThat(myBucket.key).isEqualTo("BKIAIA6BXQ7U72DQLYRQ");
-        assertThat(myBucket.secret).isEqualTo("nVoRnbUHhyhIjTfRY5mQ+onwf9zvlMEwUANxGr5Y");
-        assertThat(myBucket.name).isEqualTo("my-bucket");
+        assertThat(myBucket.alias).isEqualTo("my-bucket");
+        assertThat(myBucket.key).isEqualTo("BKIAIS6BXQ7U72DQLYRQ");
+        assertThat(myBucket.secret).isEqualTo("nVoRnbUHhdhIjTfRY5mQ+onwf9zvlMEwUANxGr5Y");
+        assertThat(myBucket.name).isEqualTo("my-bucket-name");
         assertThat(myBucket.publicUrl).isEqualTo("http://bucket-url.s3-website-eu-west-1.amazonaws.com/");
     }
 }

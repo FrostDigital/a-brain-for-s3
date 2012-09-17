@@ -115,7 +115,4 @@ public class ImgScalrProcessor implements ImageProcessor {
         return method;
     }
 
-    /*private boolean isPNG(String filename) {
-        return filename.toLowerCase().endsWith(".png");
-    } */
 }
