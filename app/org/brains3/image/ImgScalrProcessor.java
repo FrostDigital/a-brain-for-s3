@@ -1,5 +1,6 @@
 package org.brains3.image;
 
+import org.brains3.FileFormat;
 import org.brains3.Preset;
 import org.brains3.ProcessedImage;
 import org.imgscalr.Scalr;
@@ -35,7 +36,7 @@ public class ImgScalrProcessor implements ImageProcessor {
                 + "\n" + img.getColorModel().toString()
                 + "\n----------------");
 
-        if(isPNG(processedImage.originalFilename) && img.getColorModel().hasAlpha()) {
+        if(img.getColorModel().hasAlpha() && processedImage.preset.format == FileFormat.JPG) {
             // Perform PNG -> JPG alpha fix
             // https://github.com/thebuzzmedia/imgscalr/issues/59#issuecomment-3743920
             BufferedImage tmpImg = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -114,7 +115,7 @@ public class ImgScalrProcessor implements ImageProcessor {
         return method;
     }
 
-    private boolean isPNG(String filename) {
+    /*private boolean isPNG(String filename) {
         return filename.toLowerCase().endsWith(".png");
-    }
+    } */
 }

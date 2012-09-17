@@ -21,6 +21,11 @@ public class S3 extends Controller {
     }
 
     public static Result create(String bucketName, String presetName) {
+        // TODO: Stream body
+        // http://stackoverflow.com/questions/12066993/uploading-file-as-stream-in-play-framework-2-0?lq=1
+        // http://stackoverflow.com/questions/11468768/why-makes-calling-error-or-done-in-a-bodyparsers-iteratee-the-request-hang-in-p
+        // http://www.infoq.com/presentations/Play-I-ll-See-Your-Async-and-Raise-You-Reactive
+
         // Validate request
         Bucket bucket = Bucket.getBucket(bucketName);
         if(bucket == null) {
