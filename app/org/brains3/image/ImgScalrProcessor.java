@@ -28,37 +28,24 @@ public class ImgScalrProcessor implements ImageProcessor {
 
     @Override
     public ProcessedImage process(ProcessedImage processedImage, File image) throws IOException {
-        BufferedImage img = null;
+        BufferedImage img = ImageIO.read(image);
 
-        if(isPNG(processedImage.originalFilename)) {
+        Logger.debug("----------------\n"
+                + img.toString()
+                + "\n" + img.getColorModel().toString()
+                + "\n----------------");
+
+        if(isPNG(processedImage.originalFilename) && img.getColorModel().hasAlpha()) {
             // Perform PNG -> JPG alpha fix
             // https://github.com/thebuzzmedia/imgscalr/issues/59#issuecomment-3743920
+            BufferedImage tmpImg = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
 
-            BufferedImage tmpImg = ImageIO.read(image);
+            Graphics g = tmpImg.getGraphics();
+            g.drawImage(img, 0, 0, null);
+            g.dispose();
 
-            Logger.debug("----------------\n"
-                    + tmpImg.toString()
-                    + "\n" + tmpImg.getColorModel().toString()
-                    + "\n----------------");
-
-            if(tmpImg.getColorModel().hasAlpha()) {
-                img = new BufferedImage (tmpImg.getWidth(), tmpImg.getHeight(), BufferedImage.TYPE_INT_RGB);
-
-                Graphics g = img.getGraphics();
-
-                g.drawImage(tmpImg, 0, 0, null);
-                g.dispose();
-
-                //img.setData(tmpImg.getData());
-                tmpImg.flush();
-            }
-            else {
-                img = tmpImg;
-            }
-
-        }
-        else {
-            img = ImageIO.read(image);
+            img.flush();
+            img = tmpImg;
         }
 
         img = resize(img, getScalrMethod(processedImage.preset), processedImage.preset.width, processedImage.preset.height);
