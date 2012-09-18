@@ -40,4 +40,13 @@ public class ConfigParserTest extends BaseIntegrationTest {
         assertThat(myBucket.name).isEqualTo("my-bucket-name");
         assertThat(myBucket.publicUrl).isEqualTo("http://bucket-url.s3-website-eu-west-1.amazonaws.com/");
     }
+
+    @Test
+    public void testParseConfig_multipleLocations() throws Exception {
+        ConfigParser.parseConfig("test/test-conf.conf,test/test-conf2.conf");
+
+        Bucket myBucket = Bucket.getBucket("my-bucket");
+        assertThat(myBucket.key).isEqualTo("OVERRIDDEN");
+    }
+
 }

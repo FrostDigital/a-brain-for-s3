@@ -23,22 +23,32 @@ public class Global extends GlobalSettings {
             return;
         }
 
-        //String brainConfLocation = app.configuration().getString("brain-conf");
+        String brainConfLocation = app.configuration().getString("brain-conf");
 
-        /*if(brainConfLocation == null || brainConfLocation.isEmpty()) {
+        if(brainConfLocation == null || brainConfLocation.isEmpty()) {
             Logger.warn("No brain configuration was loaded, is 'brain-conf' set?");
-        } else {*/
-            //loadBrainConf(brainConfLocation);
-            ConfigParser.parseConfig(play.api.Play.unsafeApplication().configuration().underlying());
-        //}
+        } else {
+            Config brainConf = loadBrainConf(brainConfLocation);
+            ConfigParser.parseConfig(brainConfLocation);
+
+                    //brainConf.withFallback( play.api.Play.unsafeApplication().configuration().underlying() )
+            //);
+        }
     }
 
     /**
      * Load brain configuration at given location.
      * @param location - filename or URL
      */
-    private void loadBrainConf(String location) {
+    private Config loadBrainConf(String location) {
         Logger.info("Loading brain.conf from: " + location);
+
+        String[] locations = location.split(",");
+        for (String l : locations) {
+            l.trim();
+
+            ConfigFactory.parseResourcesAnySyntax(l);
+        }
 
         // TODO: This is probably already solved more elegantly
         // somewhere in Typesafe Config lib
@@ -60,6 +70,6 @@ public class Global extends GlobalSettings {
             config = ConfigFactory.parseFile(new File(location));
         }
 
-        //ConfigParser.parseConfig(config);
+        return config;
     }
 }

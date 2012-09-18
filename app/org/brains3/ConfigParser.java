@@ -1,7 +1,11 @@
 package org.brains3;
 
 import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Map;
 
 /**
@@ -12,8 +16,8 @@ import java.util.Map;
  */
 public class ConfigParser {
 
-    private static final String PRESETS_KEY = "brain-conf.presets";
-    private static final String BUCKETS_KEY = "brain-conf.buckets";
+    private static final String PRESETS_KEY = "presets";
+    private static final String BUCKETS_KEY = "buckets";
 
     public static void parseConfig(Config config) {
         parseBuckets(config.getConfig(BUCKETS_KEY));
@@ -51,6 +55,33 @@ public class ConfigParser {
                     bucketConf.getString("public-url")
             ));
         }
+    }
+
+    public static void parseConfig(String brainConfLocation) {
+        String[] locations = brainConfLocation.split(",");
+        Config config = ConfigFactory.empty();
+
+        for (String location : locations) {
+            config = parseGeneric(location).withFallback(config);
+        }
+        parseConfig(config);
+    }
+
+
+    private static Config parseGeneric(String location) {
+        Config config = null;
+        if(location.startsWith("http://")) {
+            try {
+                config = ConfigFactory.parseURL(new URL(location));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            config = ConfigFactory.parseFile(new File(location));
+        }
+
+        return config;
     }
 
 }
