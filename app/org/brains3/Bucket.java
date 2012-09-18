@@ -48,7 +48,7 @@ public class Bucket {
             }
             Logger.info("Successfully connected to bucket: " + name + " (alias: " + alias + ")");
         } catch(AmazonClientException e) {
-            Logger.error("Error while accessing S3: " + e.getMessage());
+            Logger.error("Error while accessing S3 bucket " + this.name + ": " + e.getMessage());
         }
     }
 
@@ -57,8 +57,23 @@ public class Bucket {
     }
 
     public static void saveBucket(Bucket bucket) {
+        Logger.debug("Adding bucket: " + bucket.toString());
         Cache.set(BUCKET_CACHE_PREFIX + bucket.alias, bucket);
     }
 
+    public String getMaskedKey() {
+        return key != null ? key.substring(0,2) + "*****" : null;
+    }
 
+    @Override
+    public String toString() {
+        return "Bucket{" +
+                "client=" + client +
+                ", alias='" + alias + '\'' +
+                ", name='" + name + '\'' +
+                ", key='" + getMaskedKey() + '\'' +
+                ", secret='*****" + '\'' +
+                ", publicUrl='" + publicUrl + '\'' +
+                '}';
+    }
 }

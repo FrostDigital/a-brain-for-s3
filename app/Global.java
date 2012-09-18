@@ -31,7 +31,6 @@ public class Global extends GlobalSettings {
             //loadBrainConf(brainConfLocation);
             ConfigParser.parseConfig(play.api.Play.unsafeApplication().configuration().underlying());
         //}
-
     }
 
     /**

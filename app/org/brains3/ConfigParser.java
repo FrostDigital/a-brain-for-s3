@@ -12,8 +12,8 @@ import java.util.Map;
  */
 public class ConfigParser {
 
-    private static final String PRESETS_KEY = "presets";
-    private static final String BUCKETS_KEY = "buckets";
+    private static final String PRESETS_KEY = "brain-conf.presets";
+    private static final String BUCKETS_KEY = "brain-conf.buckets";
 
     public static void parseConfig(Config config) {
         parseBuckets(config.getConfig(BUCKETS_KEY));

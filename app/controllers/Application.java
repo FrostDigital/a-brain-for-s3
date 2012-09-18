@@ -17,7 +17,7 @@ public class Application extends Controller {
     }
 
     public static Result settings() {
-        return ok(index.render("Your new application is ready."));
+        return ok("settings");
     }
 
     public static Result testUpload() {
