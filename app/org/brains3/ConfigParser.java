@@ -2,6 +2,7 @@ package org.brains3;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import play.Play;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -76,6 +77,9 @@ public class ConfigParser {
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
+        }
+        else if(!location.startsWith("/")) {
+            config = ConfigFactory.parseResources(Play.application().classloader(), location);
         }
         else {
             config = ConfigFactory.parseFile(new File(location));

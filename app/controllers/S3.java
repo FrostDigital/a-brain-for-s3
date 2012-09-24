@@ -24,6 +24,11 @@ public class S3 extends Controller {
         return null;
     }
 
+    public static Result akka(String bucketName, String presetNames) {
+        ImageProcessorActor.instance.tell("helloooo");
+        return ok("ok");
+    }
+
     public static Result create(String bucketName, String presetNames) {
         // TODO: Stream body
         // http://stackoverflow.com/questions/12066993/uploading-file-as-stream-in-play-framework-2-0?lq=1

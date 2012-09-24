@@ -1,13 +1,7 @@
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 import org.brains3.ConfigParser;
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;
-
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,7 +22,7 @@ public class Global extends GlobalSettings {
         if(brainConfLocation == null || brainConfLocation.isEmpty()) {
             Logger.warn("No brain configuration was loaded, is 'brain-conf' set?");
         } else {
-            Config brainConf = loadBrainConf(brainConfLocation);
+            //Config brainConf = loadBrainConf(brainConfLocation, app.classloader());
             ConfigParser.parseConfig(brainConfLocation);
 
                     //brainConf.withFallback( play.api.Play.unsafeApplication().configuration().underlying() )
@@ -40,7 +34,7 @@ public class Global extends GlobalSettings {
      * Load brain configuration at given location.
      * @param location - filename or URL
      */
-    private Config loadBrainConf(String location) {
+    /*private Config loadBrainConf(String location, ClassLoader classLoader) {
         Logger.info("Loading brain.conf from: " + location);
 
         String[] locations = location.split(",");
@@ -49,9 +43,6 @@ public class Global extends GlobalSettings {
 
             ConfigFactory.parseResourcesAnySyntax(l);
         }
-
-        // TODO: This is probably already solved more elegantly
-        // somewhere in Typesafe Config lib
 
         String path = location;
         Config config = null;
@@ -64,12 +55,14 @@ public class Global extends GlobalSettings {
             }
         }
         else if(!location.startsWith("/")) {
-            config = ConfigFactory.parseResources(location);
+            config = ConfigFactory.parseResources(classLoader, location);
         }
         else {
             config = ConfigFactory.parseFile(new File(location));
         }
 
+        Logger.debug(config.toString());
+
         return config;
-    }
+    } */
 }
