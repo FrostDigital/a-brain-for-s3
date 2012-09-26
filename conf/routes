@@ -4,15 +4,7 @@ GET     /settings                      controllers.Application.settings()
 GET     /test                           controllers.Application.testUpload()
 GET     /test/:bucket/:preset           controllers.Application.testBucketAndPreset(bucket: String, preset: String)
 
-#GET     /s3/:bucket/:filename           controllers.S3.getFile(bucket: String, filename: String)
 POST    /s3/:bucket/:preset           controllers.S3.create(bucket: String, preset: String)
-#PUT     /s3/:bucket/:filename           controllers.S3.update(bucket: String, filename: String)
-POST     /s3/akka/:bucket/:preset        controllers.S3.akka(bucket: String, preset: String)
-
-#DELETE  /s3/:bucket/:filename           controllers.S3.delete(bucket: String, filename: String)
-#GET     /s3/:bucket/:filename/delete    controllers.S3.delete(bucket: String, filename: String)
-
-
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 

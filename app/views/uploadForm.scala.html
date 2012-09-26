@@ -1,6 +1,6 @@
 @main("Welcome to Play 2.0") {
 
-    <form method="POST" action="@routes.S3.akka("test", "thumb,medium")" enctype="multipart/form-data">
+    <form method="POST" action="@routes.S3.create("test", "thumb,medium")" enctype="multipart/form-data">
         <input type="file" name="file" />
 
         <input type="submit" />

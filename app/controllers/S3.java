@@ -3,7 +3,6 @@ package controllers;
 import org.brains3.Bucket;
 import org.brains3.ImageProcessRequest;
 import org.brains3.Preset;
-import org.brains3.ProcessedImage;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Http;
@@ -19,41 +18,6 @@ public class S3 extends Controller {
     public static Result getFile(String bucket, String filename) {
         request().queryString();
         return null;
-    }
-
-    public static Result akka(String bucketName, String presetNames) {
-        // Validate request
-        Bucket bucket = Bucket.getBucket(bucketName);
-        if(bucket == null) {
-            return notFound("Bucket " + bucketName + " does not exist");
-        }
-
-        Set<Preset> presets = new HashSet<Preset>();
-        for(String p : presetNames.split(",")) {
-            presets.add(Preset.getPreset(p));
-        }
-
-        if(presets.isEmpty()) {
-            return notFound("Preset(s) " + presetNames + " does not exist");
-        }
-
-        Http.MultipartFormData.FilePart filePart = request().body().asMultipartFormData().getFile("file");
-        if (filePart == null) {
-            return badRequest("No file was POSTed");
-        }
-
-        List<ImageProcessRequest> processedImages = new ArrayList<ImageProcessRequest>();
-
-        for(Preset preset : presets) {
-            ImageProcessRequest imageProcessRequest = new ImageProcessRequest(preset, bucket, filePart.getFile(), filePart.getFilename());
-            /*ProcessedImage processedImage = new ProcessedImage(preset, filePart.getFilename());
-            processedImages.add(processedImage);*/
-
-            ImageProcessorActor.processImage(imageProcessRequest);
-            processedImages.add(imageProcessRequest);
-        }
-
-        return ok(Json.toJson(processedImages));
     }
 
     public static Result create(String bucketName, String presetNames) {
@@ -82,27 +46,12 @@ public class S3 extends Controller {
             return badRequest("No file was POSTed");
         }
 
-        List<ProcessedImage> processedImages = new ArrayList<ProcessedImage>();
+        List<ImageProcessRequest> processedImages = new ArrayList<ImageProcessRequest>();
 
         for(Preset preset : presets) {
-            //ProcessedImage processedImage = new ProcessedImage(preset, filePart.getFilename());
-            //processedImages.add(processedImage);
-
-            // Perform image processing
-            /*try {
-                processedImage = new ImgScalrProcessor().process(processedImage, filePart.getFile());
-            } catch (IOException e) {
-                Logger.warn("Could not process image: " + e.getMessage());
-                return internalServerError("Could not process image: " + e.getMessage());
-            } */
-
-            // Upload file
-            /*try {
-                S3Client.uploadFile(bucket, processedImage);
-            } catch (IOException e) {
-                Logger.warn("Could not upload image: " + e.getMessage());
-                return internalServerError("Could not upload image: " + e.getMessage());
-            } */
+            ImageProcessRequest imageProcessRequest = new ImageProcessRequest(preset, bucket, filePart.getFile(), filePart.getFilename());
+            ImageProcessorActor.processImage(imageProcessRequest);
+            processedImages.add(imageProcessRequest);
         }
 
         return ok(Json.toJson(processedImages));
