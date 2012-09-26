@@ -15,12 +15,12 @@ import java.io.InputStream;
  */
 public class S3Client {
 
-    public static void uploadFile(ImageProcessRequest imageProcessRequest) throws IOException {
-        InputStream inputStream = new FileInputStream(imageProcessRequest.file);
+    public static void uploadFile(ProcessedImage processedImage, ImageProcessRequest imageProcessRequest) throws IOException {
+        InputStream inputStream = new FileInputStream(processedImage.image);
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(imageProcessRequest.preset.format.contentType);
-        objectMetadata.setContentLength(imageProcessRequest.file.length());
+        objectMetadata.setContentLength(processedImage.image.length());
 
         imageProcessRequest.bucket.client.putObject(
             new PutObjectRequest(imageProcessRequest.bucket.name, imageProcessRequest.generatedFilename, inputStream, objectMetadata)

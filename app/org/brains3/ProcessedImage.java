@@ -10,14 +10,21 @@ import java.io.File;
  */
 public class ProcessedImage {
 
-    public File image;
-    public Long size;
-    public int width;
-    public int height;
+    public final File image;
+    public final Long size;
+    public final int width;
+    public final int height;
+
+    public ProcessedImage(File image, int width, int height) {
+        this.image = image;
+        this.size = image != null ? image.length() : -1;
+        this.width = width;
+        this.height = height;
+    }
 
     /*public String message;
-    public List<UploadedFile> files = new ArrayList<UploadedFile>();
-    public String fileUrl;*/
+  public List<UploadedFile> files = new ArrayList<UploadedFile>();
+  public String fileUrl;*/
 
 
 }

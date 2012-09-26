@@ -52,10 +52,11 @@ public class ImgScalrProcessor implements ImageProcessor {
 
         img = resize(img, getScalrMethod(imageProcessRequest.preset), imageProcessRequest.preset.width, imageProcessRequest.preset.height);
 
-        ProcessedImage processedImage = new ProcessedImage();
-        processedImage.image = write(img, imageProcessRequest.preset);
-        processedImage.width = img.getWidth();
-        processedImage.height = img.getHeight();
+        ProcessedImage processedImage = new ProcessedImage(
+                write(img, imageProcessRequest.preset),
+                img.getWidth(),
+                img.getHeight()
+        );
 
         return processedImage;
     }

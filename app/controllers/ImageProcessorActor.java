@@ -5,6 +5,7 @@ import akka.actor.Props;
 import akka.actor.UntypedActor;
 import akka.routing.RoundRobinRouter;
 import org.brains3.ImageProcessRequest;
+import org.brains3.ProcessedImage;
 import org.brains3.S3Client;
 import org.brains3.image.ImgScalrProcessor;
 import play.Logger;
@@ -27,24 +28,16 @@ public class ImageProcessorActor extends UntypedActor {
         if(o instanceof ImageProcessRequest) {
             ImageProcessRequest message = (ImageProcessRequest) o;
 
-            Logger.debug("starting");
+            Logger.debug("--- Starting image processing of " + message.url);
 
             try {
-                new ImgScalrProcessor().process(message);
+                ProcessedImage processedImage = new ImgScalrProcessor().process(message);
+                S3Client.uploadFile(processedImage, message);
             } catch (IOException e) {
-                Logger.warn("Could not process image: " + e.getMessage());
-                //return internalServerError("Could not process image: " + e.getMessage());
+                Logger.warn("Could not process or upload image: " + e.getMessage());
             }
 
-            // Upload file
-            try {
-                S3Client.uploadFile(message);
-            } catch (IOException e) {
-                Logger.warn("Could not upload image: " + e.getMessage());
-                //return internalServerError("Could not upload image: " + e.getMessage());
-            }
-
-            Logger.debug("ending");
+            Logger.debug("--- Ended processing of " + message.url);
         }
         else {
             unhandled(o);
@@ -54,16 +47,5 @@ public class ImageProcessorActor extends UntypedActor {
     public static void processImage(ImageProcessRequest processRequest) {
         instance.tell(processRequest);
     }
-
-    /*static class ProcessImageMessage {
-
-        public final ImageProcessRequest imageProcessRequest;
-        public final File file;
-
-        ProcessImageMessage(ImageProcessRequest imageProcessRequest, File file) {
-            this.imageProcessRequest = imageProcessRequest;
-            this.file = file;
-        }
-    } */
 
 }
