@@ -1,9 +1,39 @@
-@main("Welcome to Play 2.0") {
+@main("Test upload") {
 
-    <form method="POST" action="@routes.S3.create("test", "thumb,medium")" enctype="multipart/form-data">
+    <form id="form" method="POST" action="@routes.S3.create("test", "thumb,medium")" enctype="multipart/form-data">
+        <legend>Test upload</legend>
+
+        <label>Upload to bucket</label>
+        <input type="text" id="bucket" name="bucket" placeholder="Bucket alias">
+
+        <label>Preset(s) (separate with ,)</label>
+        <input type="text" id="presets" name="presets" placeholder="Preset name">
+
+        <label>Image file</label>
         <input type="file" name="file" />
 
-        <input type="submit" />
+        <hr />
+        <div class="controls">
+        <input type="submit" class="btn" />
+        </div>
     </form>
+
+
+    <script>
+
+        $('#form').submit(function() {
+            var bucket = $('#bucket').val()
+              , presets = $('#presets').val();
+
+            if(bucket == "" || presets == "") {
+                alert("Bucket and preset must be set");
+                return false;
+            }
+
+            $(this).attr('action', '/' + bucket + '/' + presets);
+        });
+
+
+    </script>
 
 }

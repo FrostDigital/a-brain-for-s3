@@ -8,6 +8,8 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import play.Logger;
 import play.cache.Cache;
 
+import java.util.*;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Joel Soderstrom (joel[at]frostdigital[dot]se)
@@ -16,7 +18,7 @@ import play.cache.Cache;
  */
 public class Bucket {
 
-    private static final String BUCKET_CACHE_PREFIX = "bucket.";
+    private static final String CACHE_KEY = "buckets";
 
     public AmazonS3 client = null;
 
@@ -60,12 +62,23 @@ public class Bucket {
     }
 
     public static Bucket getBucket(final String bucketAlias) {
-        return (Bucket) Cache.get(BUCKET_CACHE_PREFIX + bucketAlias);
+        Map<String, Bucket> buckets = (Map<String, Bucket>) Cache.get(CACHE_KEY);
+        return buckets != null ? buckets.get(bucketAlias) : null;
     }
 
     public static void saveBucket(Bucket bucket) {
-        Logger.debug("Adding bucket: " + bucket.toString());
-        Cache.set(BUCKET_CACHE_PREFIX + bucket.alias, bucket);
+        Map<String, Bucket> buckets = (Map<String, Bucket>) Cache.get(CACHE_KEY);
+        if(buckets == null) {
+            buckets = new HashMap<String, Bucket>();
+            Cache.set(CACHE_KEY, buckets);
+        }
+
+        buckets.put(bucket.alias, bucket);
+    }
+
+    public static List<Bucket> getAll() {
+        Map<String, Bucket> buckets = (Map<String, Bucket>) Cache.get(CACHE_KEY);
+        return buckets != null ? new ArrayList<Bucket>(buckets.values()) : Collections.<Bucket>emptyList();
     }
 
     public String getMaskedKey() {

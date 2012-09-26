@@ -2,6 +2,8 @@ package org.brains3;
 
 import play.cache.Cache;
 
+import java.util.*;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Joel Soderstrom (joel[at]frostdigital[dot]se)
@@ -32,11 +34,22 @@ public class Preset {
     }
 
     public static Preset getPreset(final String presetName) {
-        return (Preset) Cache.get("preset." + presetName);
+        Map<String, Preset> presets = (Map<String, Preset>) Cache.get("presets");
+        return presets != null ? presets.get(presetName) : null;
     }
 
     public static void savePreset(Preset preset) {
-        Cache.set("preset." + preset.name, preset);
+        Map<String, Preset> presets = (Map<String, Preset>) Cache.get("presets");
+        if(presets == null) {
+            presets = new HashMap<String, Preset>();
+            Cache.set("presets", presets);
+        }
+        presets.put(preset.name, preset);
+    }
+
+    public static List<Preset> getAll() {
+        Map<String, Preset> presets = (Map<String, Preset>) Cache.get("presets");
+        return presets != null ? new ArrayList<Preset>(presets.values()) : Collections.<Preset>emptyList();
     }
 
     @Override

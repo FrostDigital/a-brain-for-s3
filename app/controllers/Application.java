@@ -4,7 +4,7 @@ import org.brains3.Bucket;
 import org.brains3.Preset;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.index;
+import views.html.*;
 import views.html.uploadForm;
 
 import java.util.HashSet;
@@ -17,7 +17,9 @@ public class Application extends Controller {
     }
 
     public static Result settings() {
-        return ok("settings");
+        return ok(
+                settings.render(Preset.getAll(), Bucket.getAll())
+        );
     }
 
     public static Result testUpload() {
