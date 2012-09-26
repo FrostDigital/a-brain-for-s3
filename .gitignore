@@ -10,3 +10,5 @@ dist
 .settings
 RUNNING_PID
 test/jmx
+makefile
+check.sh
