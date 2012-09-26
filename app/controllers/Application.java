@@ -13,12 +13,12 @@ import java.util.Set;
 public class Application extends Controller {
   
     public static Result index() {
-        return ok(index.render("Your new application is ready."));
+        return ok(index.render());
     }
 
     public static Result settings() {
         return ok(
-                settings.render(Preset.getAll(), Bucket.getAll())
+            settings.render(Preset.getAll(), Bucket.getAll())
         );
     }
 

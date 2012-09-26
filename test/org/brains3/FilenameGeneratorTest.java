@@ -13,43 +13,21 @@ import static org.fest.assertions.Assertions.assertThat;
 public class FilenameGeneratorTest {
 
     @Test
-    public void testParse() throws Exception {
-        assertThat(FilenameGenerator.parse("UID")).isEqualTo(FilenameGenerator.UID);
-        assertThat(FilenameGenerator.parse("none")).isEqualTo(FilenameGenerator.NONE);
-        //assertThat(FilenameGenerator.parse("prepend_timestamp ")).isEqualTo(FilenameGenerator.PREPEND_TIMESTAMP);
-        assertThat(FilenameGenerator.parse("prepend-uid")).isEqualTo(FilenameGenerator.PREPEND_UID);
-        assertThat(FilenameGenerator.parse("prepend-uid_dir")).isEqualTo(FilenameGenerator.PREPEND_UID_DIR);
-        assertThat(FilenameGenerator.parse(null)).isEqualTo(FilenameGenerator.NONE);
-    }
-
-    @Test
     public void testGenerateFilename_uid() throws Exception {
-        String filename = FilenameGenerator.UID.generate("foo.png", FileFormat.GIF);
-        assertThat(filename).endsWith(".gif");
-        assertThat(filename.length()).isGreaterThan(10);
+        String filename = FilenameGenerator.generate("{uid}.gif", null, "12345678");
+        assertThat(filename).isEqualTo("12345678.gif");
     }
 
     @Test
     public void testGenerateFilename_none() throws Exception {
-        String filename = FilenameGenerator.NONE.generate("foo.png", FileFormat.GIF);
-        assertThat(filename).isEqualTo("foo.gif");
-
-        filename = FilenameGenerator.NONE.generate("foo", FileFormat.GIF);
+        String filename = FilenameGenerator.generate("{orig}.gif", "foo.jpg", null);
         assertThat(filename).isEqualTo("foo.gif");
     }
 
     @Test
     public void testGenerateFilename_prependUid() throws Exception {
-        String filename = FilenameGenerator.PREPEND_UID.generate("foo.png", FileFormat.GIF);
-        assertThat(filename).endsWith("_foo.gif");
-        assertThat(filename.length()).isGreaterThan(10);
-    }
+        String filename = FilenameGenerator.generate("{uid}_{orig}.gif", "foo.jpg", "123456789");
+        assertThat(filename).isEqualTo("123456789_foo.gif");
 
-    @Test
-    public void testGenerateFilename_prependUidDir() throws Exception {
-        String filename = FilenameGenerator.PREPEND_UID_DIR.generate("foo.png", FileFormat.GIF);
-        assertThat(filename).endsWith("/foo.gif");
-        assertThat(filename.length()).isGreaterThan(10);
     }
-
 }

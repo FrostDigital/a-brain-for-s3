@@ -17,18 +17,18 @@ public class Preset {
     public final int height;
     public final ScaleMethod scaleMethod;
     public final ResizeStrategy resizeStrategy;
-    public final FilenameGenerator filenameGenerator;
+    public final String filenamePattern;
     public final FileFormat format;
     public final Integer compressionLevel;
 
     public Preset(String name, int width, int height, ResizeStrategy resizeStrategy, ScaleMethod scaleMethod,
-                  FilenameGenerator filenameGenerator, FileFormat format, Integer compressionLevel) {
+                  String filenamePattern, FileFormat format, Integer compressionLevel) {
         this.name = name;
         this.width = width;
         this.height = height;
         this.scaleMethod = scaleMethod;
         this.resizeStrategy = resizeStrategy;
-        this.filenameGenerator = filenameGenerator;
+        this.filenamePattern = filenamePattern;
         this.format = format;
         this.compressionLevel = compressionLevel;
     }
@@ -59,7 +59,7 @@ public class Preset {
                 ", height=" + height +
                 ", scaleMethod=" + scaleMethod +
                 ", resizeStrategy=" + resizeStrategy +
-                ", filenameGenerator=" + filenameGenerator +
+                ", filenamePattern=" + filenamePattern +
                 ", format=" + format +
                 ", compressionLevel=" + compressionLevel +
                 '}';

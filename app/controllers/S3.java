@@ -1,6 +1,7 @@
 package controllers;
 
 import org.brains3.Bucket;
+import org.brains3.FilenameGenerator;
 import org.brains3.ImageProcessRequest;
 import org.brains3.Preset;
 import play.libs.Json;
@@ -14,11 +15,6 @@ import java.util.List;
 import java.util.Set;
 
 public class S3 extends Controller {
-
-    public static Result getFile(String bucket, String filename) {
-        request().queryString();
-        return null;
-    }
 
     public static Result create(String bucketName, String presetNames) {
         // TODO: Stream body
@@ -46,15 +42,30 @@ public class S3 extends Controller {
             return badRequest("No file was POSTed");
         }
 
-        List<ImageProcessRequest> processedImages = new ArrayList<ImageProcessRequest>();
+        List<ImageProcessRequest> imageProcessRequests = prepareProcessing(bucket, presets, filePart);
 
-        for(Preset preset : presets) {
-            ImageProcessRequest imageProcessRequest = new ImageProcessRequest(preset, bucket, filePart.getFile(), filePart.getFilename());
-            ImageProcessorActor.processImage(imageProcessRequest);
-            processedImages.add(imageProcessRequest);
+        for(ImageProcessRequest req : imageProcessRequests) {
+            ImageProcessorActor.processImage(req);
         }
 
-        return ok(Json.toJson(processedImages));
+        return ok(Json.toJson(imageProcessRequests));
+    }
+
+    private static List<ImageProcessRequest> prepareProcessing(Bucket bucket, Set<Preset> presets, Http.MultipartFormData.FilePart filePart) {
+        List<ImageProcessRequest> imageProcessRequests = new ArrayList<ImageProcessRequest>();
+        String sharedUID = FilenameGenerator.uid();
+
+        for(Preset preset : presets) {
+            imageProcessRequests.add(new ImageProcessRequest(
+                    preset,
+                    bucket,
+                    filePart.getFile(),
+                    filePart.getFilename(),
+                    FilenameGenerator.generate(preset.filenamePattern, filePart.getFilename(), sharedUID)
+            ));
+        }
+
+        return imageProcessRequests;
     }
 
 }

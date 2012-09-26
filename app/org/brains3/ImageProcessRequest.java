@@ -18,16 +18,10 @@ public class ImageProcessRequest {
     public final String url;
     @JsonIgnore public final Bucket bucket;
     @JsonIgnore public final File file;
-    //public Long size;
-    //public int width;
-    //public int height;
 
-    //@JsonIgnore public final File image;
-
-
-    public ImageProcessRequest(/*String generatedFilename,*/ Preset preset, Bucket bucket, File file, String originalFilename) {
+    public ImageProcessRequest(Preset preset, Bucket bucket, File file, String originalFilename, String generatedFilename) {
         this.originalFilename = originalFilename;
-        this.generatedFilename = preset.filenameGenerator.generate(originalFilename, preset.format);
+        this.generatedFilename = generatedFilename;
         this.preset = preset;
         this.url = bucket.publicUrl + this.generatedFilename;
         this.file = file;

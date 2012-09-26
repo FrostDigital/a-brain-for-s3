@@ -23,9 +23,10 @@ public class ImgScalrProcessorTest {
         // GIVEN
         File img = readTestImage("./test/large.jpg");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
-                FilenameGenerator.UID, FileFormat.JPG, 50);
+                "{uid}.jpg", FileFormat.JPG, 50);
 
-        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName());
+        ImageProcessRequest req = new ImageProcessRequest(
+                preset, bucket(), img, img.getName(), "foo");
 
         // WHEN
         ProcessedImage processedImage = processor.process(req);
@@ -42,8 +43,8 @@ public class ImgScalrProcessorTest {
         // GIVEN
         File img = readTestImage("./test/large.jpg");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
-                FilenameGenerator.UID, FileFormat.PNG, 100);
-        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName());
+                "{uid}.png", FileFormat.PNG, 100);
+        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName(), "foo");
 
         // WHEN
         ProcessedImage processedImage = processedImage = processor.process(req);
@@ -61,8 +62,10 @@ public class ImgScalrProcessorTest {
         // GIVEN
         File img = readTestImage("./test/large.jpg");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
-                FilenameGenerator.UID, FileFormat.BMP, 100);
-        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName());
+                "{uid}.bmp", FileFormat.BMP, 100);
+        ImageProcessRequest req = new ImageProcessRequest(
+                preset, bucket(), img, img.getName(), "foo");
+
 
         // WHEN
         ProcessedImage processedImage = processedImage = processor.process(req);
@@ -80,8 +83,8 @@ public class ImgScalrProcessorTest {
         // GIVEN
         File img = readTestImage("./test/large.jpg");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
-                FilenameGenerator.UID, FileFormat.GIF, 100);
-        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName());
+                "{uid}.gif", FileFormat.GIF, 100);
+        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName(), "foo");
 
         // WHEN
         ProcessedImage processedImage = processedImage = processor.process(req);
@@ -99,8 +102,8 @@ public class ImgScalrProcessorTest {
         // GIVEN
         File img = readTestImage("./test/large.jpg");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
-                FilenameGenerator.UID, FileFormat.TIFF, 100);
-        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName());
+                "{uid}.tiff", FileFormat.TIFF, 100);
+        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName(), "foo");
 
         // WHEN
         ProcessedImage processedImage = processedImage = processor.process(req);
@@ -117,8 +120,8 @@ public class ImgScalrProcessorTest {
         // GIVEN
         File img = readTestImage("./test/large.png");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
-                FilenameGenerator.UID, FileFormat.JPG, 100);
-        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName());
+                "{uid}.jpg", FileFormat.JPG, 100);
+        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName(), "foo");
 
         // WHEN
         ProcessedImage processedImage = processedImage = processor.process(req);
@@ -135,8 +138,8 @@ public class ImgScalrProcessorTest {
         // GIVEN
         File img = readTestImage("./test/alpha.png");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
-                FilenameGenerator.UID, FileFormat.JPG, 100);
-        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName());
+                "{uid}.jpg", FileFormat.JPG, 100);
+        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName(), "foo");
 
         // WHEN
         ProcessedImage processedImage = processedImage = processor.process(req);
@@ -152,9 +155,8 @@ public class ImgScalrProcessorTest {
     public void testProcess_PNGAlphaToJPG2() throws Exception {
         // GIVEN
         File img = readTestImage("./test/alpha2.png");
-        Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
-                FilenameGenerator.UID, FileFormat.JPG, 100);
-        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName());
+        Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC, "{uid}.jpg", FileFormat.JPG, 100);
+        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName(), "foo");
 
         // WHEN
         ProcessedImage processedImage = processedImage = processor.process(req);
@@ -170,9 +172,8 @@ public class ImgScalrProcessorTest {
     public void testProcess_PNGAlphaToPNG() throws Exception {
         // GIVEN
         File img = readTestImage("./test/alpha.png");
-        Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
-                FilenameGenerator.UID, FileFormat.PNG, 100);
-        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName());
+        Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC, "{uid}.png", FileFormat.PNG, 100);
+        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName(), "foo");
 
         // WHEN
         ProcessedImage processedImage = processedImage = processor.process(req);

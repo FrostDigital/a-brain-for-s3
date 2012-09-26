@@ -22,11 +22,7 @@ public class Global extends GlobalSettings {
         if(brainConfLocation == null || brainConfLocation.isEmpty()) {
             Logger.warn("No brain configuration was loaded, is 'brain-conf' set?");
         } else {
-            //Config brainConf = loadBrainConf(brainConfLocation, app.classloader());
             ConfigParser.parseConfig(brainConfLocation);
-
-                    //brainConf.withFallback( play.api.Play.unsafeApplication().configuration().underlying() )
-            //);
         }
     }
 

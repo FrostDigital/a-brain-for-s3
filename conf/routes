@@ -5,6 +5,6 @@ GET     /test                           controllers.Application.testUpload()
 GET     /test/:bucket/:preset           controllers.Application.testBucketAndPreset(bucket: String, preset: String)
 
 POST    /s3/:bucket/:preset           controllers.S3.create(bucket: String, preset: String)
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /assets/*file                 controllers.Assets.at(path="/public", file)
 
 

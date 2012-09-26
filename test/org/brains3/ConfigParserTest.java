@@ -1,9 +1,6 @@
 package org.brains3;
 
-import com.typesafe.config.ConfigFactory;
 import org.junit.Test;
-
-import java.io.File;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -18,13 +15,13 @@ public class ConfigParserTest extends BaseIntegrationTest {
 
     @Test
     public void testParseConfig() throws Exception {
-        ConfigParser.parseConfig(ConfigFactory.parseFile(new File("conf/test-conf.conf")));
+        ConfigParser.parseConfig("test-conf3.conf");
 
         Preset thumbPreset = Preset.getPreset("thumb");
 
         assertThat(thumbPreset).isNotNull();
         assertThat(thumbPreset.name).isEqualTo("thumb");
-        assertThat(thumbPreset.filenameGenerator).isEqualTo(FilenameGenerator.UID);
+        assertThat(thumbPreset.filenamePattern).isEqualTo("{uid}.jpg");
         assertThat(thumbPreset.format).isEqualTo(FileFormat.JPG);
         assertThat(thumbPreset.resizeStrategy).isEqualTo(ResizeStrategy.FIT);
         assertThat(thumbPreset.width).isEqualTo(100);
