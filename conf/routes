@@ -7,7 +7,7 @@ GET     /test/:bucket/:preset           controllers.Application.testBucketAndPre
 #GET     /s3/:bucket/:filename           controllers.S3.getFile(bucket: String, filename: String)
 POST    /s3/:bucket/:preset           controllers.S3.create(bucket: String, preset: String)
 #PUT     /s3/:bucket/:filename           controllers.S3.update(bucket: String, filename: String)
-GET     /akka                           controllers.S3.akka(bucket: String, preset: String)
+POST     /s3/akka/:bucket/:preset        controllers.S3.akka(bucket: String, preset: String)
 
 #DELETE  /s3/:bucket/:filename           controllers.S3.delete(bucket: String, filename: String)
 #GET     /s3/:bucket/:filename/delete    controllers.S3.delete(bucket: String, filename: String)

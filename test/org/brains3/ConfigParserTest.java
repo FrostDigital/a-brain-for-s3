@@ -18,7 +18,7 @@ public class ConfigParserTest extends BaseIntegrationTest {
 
     @Test
     public void testParseConfig() throws Exception {
-        ConfigParser.parseConfig(ConfigFactory.parseFile(new File("test/test-conf.conf")));
+        ConfigParser.parseConfig(ConfigFactory.parseFile(new File("conf/test-conf.conf")));
 
         Preset thumbPreset = Preset.getPreset("thumb");
 
@@ -43,7 +43,7 @@ public class ConfigParserTest extends BaseIntegrationTest {
 
     @Test
     public void testParseConfig_multipleLocations() throws Exception {
-        ConfigParser.parseConfig("test/test-conf.conf,test/test-conf2.conf");
+        ConfigParser.parseConfig("test-conf.conf,test-conf2.conf");
 
         Bucket myBucket = Bucket.getBucket("my-bucket");
         assertThat(myBucket.key).isEqualTo("OVERRIDDEN");

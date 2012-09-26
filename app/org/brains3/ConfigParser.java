@@ -2,6 +2,7 @@ package org.brains3;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import play.Logger;
 import play.Play;
 
 import java.io.File;
@@ -26,11 +27,12 @@ public class ConfigParser {
     }
 
     private static void parsePresets(Config presets) {
+        Logger.info("----------- Parsing " + presets.root().entrySet().size() + " preset(s)");
+
         for(Map.Entry<String, Object> e : presets.root().unwrapped().entrySet()) {
             final String presetName = e.getKey();
             Config presetConf = presets.getConfig(presetName);
-
-            Preset.savePreset(new Preset(
+            Preset preset = new Preset(
                     presetName,
                     presetConf.getInt("width"),
                     presetConf.getInt("height"),
@@ -39,11 +41,16 @@ public class ConfigParser {
                     FilenameGenerator.parse(presetConf.getString("filename-generator")),
                     FileFormat.parse(presetConf.getString("format")),
                     presetConf.getInt("compression-level")
-            ));
+            );
+            Preset.savePreset(preset);
+            Logger.info(preset.toString());
         }
+
     }
 
     private static void parseBuckets(Config buckets) {
+        Logger.info("----------- Parsing " + buckets.root().entrySet().size() + " bucket(s)");
+
         for(Map.Entry<String, Object> e : buckets.root().unwrapped().entrySet()) {
             final String bucketName = e.getKey();
             Config bucketConf = buckets.getConfig(bucketName);
@@ -55,6 +62,7 @@ public class ConfigParser {
                     bucketConf.getString("secret"),
                     bucketConf.getString("public-url")
             ));
+            Logger.info(bucketConf.toString());
         }
     }
 

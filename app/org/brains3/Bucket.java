@@ -27,12 +27,19 @@ public class Bucket {
     public final String publicUrl;
 
     public Bucket(String alias, String name, String key, String secret, String publicUrl) {
+        this(alias, name, key, secret, publicUrl, true);
+    }
+
+    public Bucket(String alias, String name, String key, String secret, String publicUrl, boolean initClient) {
         this.alias = alias;
         this.name = name;
         this.key = key;
         this.secret = secret;
         this.publicUrl = publicUrl;
-        initS3Client();
+
+        if(initClient) {
+            initS3Client();
+        }
     }
 
     public void initS3Client() {

@@ -39,5 +39,16 @@ public class Preset {
         Cache.set("preset." + preset.name, preset);
     }
 
-
+    @Override
+    public String toString() {
+        return name + " {"+
+                ", width=" + width +
+                ", height=" + height +
+                ", scaleMethod=" + scaleMethod +
+                ", resizeStrategy=" + resizeStrategy +
+                ", filenameGenerator=" + filenameGenerator +
+                ", format=" + format +
+                ", compressionLevel=" + compressionLevel +
+                '}';
+    }
 }

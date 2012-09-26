@@ -1,7 +1,5 @@
 package org.brains3;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-
 import java.io.File;
 
 /**
@@ -12,24 +10,10 @@ import java.io.File;
  */
 public class ProcessedImage {
 
-
-    public final String generatedFilename;
-    public final String originalFilename;
-    public final Preset preset;
-
-    @JsonIgnore
     public File image;
-    public String name;
-    public String url;
     public Long size;
     public int width;
     public int height;
-
-    public ProcessedImage(Preset preset, String originalFilename) {
-        this.preset = preset;
-        this.originalFilename = originalFilename;
-        this.generatedFilename = preset.filenameGenerator.generate(originalFilename, preset.format);
-    }
 
     /*public String message;
     public List<UploadedFile> files = new ArrayList<UploadedFile>();

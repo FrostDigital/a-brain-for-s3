@@ -25,10 +25,10 @@ public class ImgScalrProcessorTest {
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
                 FilenameGenerator.UID, FileFormat.JPG, 50);
 
-        ProcessedImage processedImage = new ProcessedImage(preset, img.getName());
+        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName());
 
         // WHEN
-        processedImage = processor.process(processedImage, img);
+        ProcessedImage processedImage = processor.process(req);
 
         // THEN
         assertNotNull(processedImage);
@@ -43,10 +43,10 @@ public class ImgScalrProcessorTest {
         File img = readTestImage("./test/large.jpg");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
                 FilenameGenerator.UID, FileFormat.PNG, 100);
-        ProcessedImage processedImage = new ProcessedImage(preset, img.getName());
+        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName());
 
         // WHEN
-        processedImage = processor.process(processedImage, img);
+        ProcessedImage processedImage = processedImage = processor.process(req);
 
         // THEN
         assertNotNull(processedImage);
@@ -62,10 +62,10 @@ public class ImgScalrProcessorTest {
         File img = readTestImage("./test/large.jpg");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
                 FilenameGenerator.UID, FileFormat.BMP, 100);
-        ProcessedImage processedImage = new ProcessedImage(preset, img.getName());
+        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName());
 
         // WHEN
-        processedImage = processor.process(processedImage, img);
+        ProcessedImage processedImage = processedImage = processor.process(req);
 
         // THEN
         assertNotNull(processedImage);
@@ -81,10 +81,10 @@ public class ImgScalrProcessorTest {
         File img = readTestImage("./test/large.jpg");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
                 FilenameGenerator.UID, FileFormat.GIF, 100);
-        ProcessedImage processedImage = new ProcessedImage(preset, img.getName());
+        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName());
 
         // WHEN
-        processedImage = processor.process(processedImage, img);
+        ProcessedImage processedImage = processedImage = processor.process(req);
 
         // THEN
         assertNotNull(processedImage);
@@ -100,10 +100,10 @@ public class ImgScalrProcessorTest {
         File img = readTestImage("./test/large.jpg");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
                 FilenameGenerator.UID, FileFormat.TIFF, 100);
-        ProcessedImage processedImage = new ProcessedImage(preset, img.getName());
+        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName());
 
         // WHEN
-        processedImage = processor.process(processedImage, img);
+        ProcessedImage processedImage = processedImage = processor.process(req);
 
         // THEN
         assertNotNull(processedImage);
@@ -118,10 +118,10 @@ public class ImgScalrProcessorTest {
         File img = readTestImage("./test/large.png");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
                 FilenameGenerator.UID, FileFormat.JPG, 100);
-        ProcessedImage processedImage = new ProcessedImage(preset, img.getName());
+        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName());
 
         // WHEN
-        processedImage = processor.process(processedImage, img);
+        ProcessedImage processedImage = processedImage = processor.process(req);
 
         // THEN
         assertNotNull(processedImage);
@@ -136,10 +136,10 @@ public class ImgScalrProcessorTest {
         File img = readTestImage("./test/alpha.png");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
                 FilenameGenerator.UID, FileFormat.JPG, 100);
-        ProcessedImage processedImage = new ProcessedImage(preset, img.getName());
+        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName());
 
         // WHEN
-        processedImage = processor.process(processedImage, img);
+        ProcessedImage processedImage = processedImage = processor.process(req);
 
         // THEN
         assertNotNull(processedImage);
@@ -154,10 +154,10 @@ public class ImgScalrProcessorTest {
         File img = readTestImage("./test/alpha2.png");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
                 FilenameGenerator.UID, FileFormat.JPG, 100);
-        ProcessedImage processedImage = new ProcessedImage(preset, img.getName());
+        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName());
 
         // WHEN
-        processedImage = processor.process(processedImage, img);
+        ProcessedImage processedImage = processedImage = processor.process(req);
 
         // THEN
         assertNotNull(processedImage);
@@ -172,10 +172,10 @@ public class ImgScalrProcessorTest {
         File img = readTestImage("./test/alpha.png");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
                 FilenameGenerator.UID, FileFormat.PNG, 100);
-        ProcessedImage processedImage = new ProcessedImage(preset, img.getName());
+        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName());
 
         // WHEN
-        processedImage = processor.process(processedImage, img);
+        ProcessedImage processedImage = processedImage = processor.process(req);
 
         // THEN
         assertNotNull(processedImage);
@@ -196,5 +196,9 @@ public class ImgScalrProcessorTest {
             fail("Test image does not seem to exist");
         }
         return f;
+    }
+
+    private Bucket bucket() {
+        return new Bucket(null, null, null, null, "http://foo.com", false);
     }
 }

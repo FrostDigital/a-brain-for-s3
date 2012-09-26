@@ -1,6 +1,7 @@
 package org.brains3.image;
 
 import org.brains3.FileFormat;
+import org.brains3.ImageProcessRequest;
 import org.brains3.Preset;
 import org.brains3.ProcessedImage;
 import org.imgscalr.Scalr;
@@ -28,15 +29,15 @@ import static org.imgscalr.Scalr.resize;
 public class ImgScalrProcessor implements ImageProcessor {
 
     @Override
-    public ProcessedImage process(ProcessedImage processedImage, File image) throws IOException {
-        BufferedImage img = ImageIO.read(image);
+    public ProcessedImage process(ImageProcessRequest imageProcessRequest) throws IOException {
+        BufferedImage img = ImageIO.read(imageProcessRequest.file);
 
         Logger.debug("----------------\n"
                 + img.toString()
                 + "\n" + img.getColorModel().toString()
                 + "\n----------------");
 
-        if(img.getColorModel().hasAlpha() && processedImage.preset.format == FileFormat.JPG) {
+        if(img.getColorModel().hasAlpha() && imageProcessRequest.preset.format == FileFormat.JPG) {
             // Perform PNG -> JPG alpha fix
             // https://github.com/thebuzzmedia/imgscalr/issues/59#issuecomment-3743920
             BufferedImage tmpImg = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -49,9 +50,10 @@ public class ImgScalrProcessor implements ImageProcessor {
             img = tmpImg;
         }
 
-        img = resize(img, getScalrMethod(processedImage.preset), processedImage.preset.width, processedImage.preset.height);
+        img = resize(img, getScalrMethod(imageProcessRequest.preset), imageProcessRequest.preset.width, imageProcessRequest.preset.height);
 
-        processedImage.image = write(img, processedImage.preset);
+        ProcessedImage processedImage = new ProcessedImage();
+        processedImage.image = write(img, imageProcessRequest.preset);
         processedImage.width = img.getWidth();
         processedImage.height = img.getHeight();
 
