@@ -16,7 +16,13 @@ import java.util.Set;
 
 public class S3 extends Controller {
 
-    public static Result create(String bucketName, String presetNames) {
+    public static Result preflightRequest(String bucket, String preset) {
+        // Handle request when browsers checks if CORS is possible
+        cors(response());
+        return ok();
+    }
+
+    public static Result upload(String bucketName, String presetNames) {
         // TODO: Stream body
         // http://stackoverflow.com/questions/12066993/uploading-file-as-stream-in-play-framework-2-0?lq=1
         // http://stackoverflow.com/questions/11468768/why-makes-calling-error-or-done-in-a-bodyparsers-iteratee-the-request-hang-in-p
@@ -37,16 +43,16 @@ public class S3 extends Controller {
             return notFound("Preset(s) " + presetNames + " does not exist");
         }
 
-        Http.MultipartFormData.FilePart filePart = request().body().asMultipartFormData().getFile("file");
-        if (filePart == null) {
-            return badRequest("No file was POSTed");
+        List<ImageProcessRequest> imageProcessRequests = new ArrayList<ImageProcessRequest>();
+
+        for(Http.MultipartFormData.FilePart filePart : request().body().asMultipartFormData().getFiles()) {
+            imageProcessRequests.addAll(prepareProcessing(bucket, presets, filePart));
+            for(ImageProcessRequest req : imageProcessRequests) {
+                ImageProcessorActor.processImage(req);
+            }
         }
 
-        List<ImageProcessRequest> imageProcessRequests = prepareProcessing(bucket, presets, filePart);
-
-        for(ImageProcessRequest req : imageProcessRequests) {
-            ImageProcessorActor.processImage(req);
-        }
+        cors(response());
 
         return ok(Json.toJson(imageProcessRequests));
     }
@@ -66,6 +72,12 @@ public class S3 extends Controller {
         }
 
         return imageProcessRequests;
+    }
+
+    private static void cors(Http.Response response) {
+        response().setHeader("Access-Control-Allow-Origin", "*");
+        response().setHeader("Access-Control-Allow-Methods", "OPTIONS, HEAD, GET, POST, PUT, DELETE");
+        response().setHeader("Access-Control-Allow-Headers", "origin, x-mime-type, x-requested-with, x-file-name, content-type");
     }
 
 }

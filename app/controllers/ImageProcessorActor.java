@@ -28,7 +28,8 @@ public class ImageProcessorActor extends UntypedActor {
         if(o instanceof ImageProcessRequest) {
             ImageProcessRequest message = (ImageProcessRequest) o;
 
-            Logger.debug("--- Starting image processing of " + message.url);
+            Long start = System.currentTimeMillis();
+            Logger.debug("------------- Start processing " + message.generatedFilename);
 
             try {
                 ProcessedImage processedImage = new ImgScalrProcessor().process(message);
@@ -37,7 +38,7 @@ public class ImageProcessorActor extends UntypedActor {
                 Logger.warn("Could not process or upload image: " + e.getMessage());
             }
 
-            Logger.debug("--- Ended processing of " + message.url);
+            Logger.debug("------------- End processing   " + message.generatedFilename + " (" + (System.currentTimeMillis() - start) + " ms)");
         }
         else {
             unhandled(o);

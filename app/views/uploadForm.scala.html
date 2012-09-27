@@ -1,39 +1,90 @@
-@main("Test upload") {
+@(presets: List[org.brains3.Preset], buckets: List[org.brains3.Bucket])
 
-    <form id="form" method="POST" action="@routes.S3.create("test", "thumb,medium")" enctype="multipart/form-data">
+@main("Test upload") {
+    <!-- form id="form" action="#"-->
         <legend>Test upload</legend>
 
         <label>Upload to bucket</label>
-        <input type="text" id="bucket" name="bucket" placeholder="Bucket alias">
+        <select id="bucket">
+            @for(b <- buckets) {
+                <option>@b.alias</option>
+            }
+        </select>
 
         <label>Preset(s) (separate with ,)</label>
-        <input type="text" id="presets" name="presets" placeholder="Preset name">
+        <select multiple="multiple" id="presets">
+            @for(p <- presets) {
+            	<option>@p.name</option>
+            }
+        </select>
 
         <label>Image file</label>
-        <input type="file" name="file" />
+
+        <div id="uploadBtn">
+            <a href="#" class="btn">Choose file</a>
+        </div>
 
         <hr />
-        <div class="controls">
-        <input type="submit" class="btn" />
-        </div>
-    </form>
 
+        <div class="controls">
+            <a href="#" id="submit" class="btn">Upload</a>
+        </div>
+    <!-- /form -->
+	
+	<div id="result" style="display:none;">
+		<h4>Received response:</h4>
+		<pre><code></code></pre>
+	</div>
+    <script src="@routes.Assets.at("javascripts/fileuploader.js")" type="text/javascript"></script>
 
     <script>
+        var action
+         , uploader
+         , $result = $('#result')
+         , $bucket = $('#bucket')
+ 		 , $presets = $('#presets');
 
-        $('#form').submit(function() {
-            var bucket = $('#bucket').val()
-              , presets = $('#presets').val();
-
-            if(bucket == "" || presets == "") {
-                alert("Bucket and preset must be set");
-                return false;
-            }
-
-            $(this).attr('action', '/s3/' + bucket + '/' + presets);
+        $bucket.change(function() {
+            console.log('Changed bucket value to ' + $(this).val());
+			buildURL();
         });
 
+        $presets.change(function() {
+            console.log('Changed preset value to ' + $(this).val());
+			buildURL();
+        });
 
+		$('#submit').click(function() {
+			console.log("Uploading to: " + action)
+            uploader.uploadStoredFiles();
+            return false;
+        });
+		
+		function buildURL() {
+			action = "/s3/" + $bucket.val()  + "/" + $presets.val();
+			createUploader();
+		}
+
+        function createUploader(){
+            uploader = new qq.FileUploaderBasic({
+                button: document.getElementById('uploadBtn'),
+                action: action,
+                debug: true,
+                forceMultipart: true,
+                autoUpload: false,
+                onComplete: function(id, fileName, responseJSON) {
+                    $result.show().find('pre code').html(JSON.stringify(responseJSON));
+					
+					return true;
+               	},
+                onError: function(id, fileName, errorReason) {
+                    alert('Error while uploading file: ' + errorReason);
+                } 
+            });
+        }
+
+        // in your app create uploader as soon as the DOM is ready
+        // don't wait for the window to load
+        window.onload = createUploader;
     </script>
-
 }

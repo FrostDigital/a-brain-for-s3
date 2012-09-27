@@ -23,7 +23,7 @@ public class Application extends Controller {
     }
 
     public static Result testUpload() {
-        return ok(uploadForm.render());
+        return ok(uploadForm.render(Preset.getAll(), Bucket.getAll()));
     }
 
     public static Result testBucketAndPreset(String bucket, String preset) {
