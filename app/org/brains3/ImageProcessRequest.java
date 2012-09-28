@@ -27,4 +27,8 @@ public class ImageProcessRequest {
         this.file = file;
         this.bucket = bucket;
     }
+
+    public String getBucket() {
+        return this.bucket.name;
+    }
 }
