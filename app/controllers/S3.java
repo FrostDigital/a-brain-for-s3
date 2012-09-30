@@ -89,9 +89,9 @@ public class S3 extends Controller {
     }
 
     private static void cors(Http.Response response) {
-        response().setHeader("Access-Control-Allow-Origin", "*");
-        response().setHeader("Access-Control-Allow-Methods", "OPTIONS, HEAD, GET, POST, PUT, DELETE");
-        response().setHeader("Access-Control-Allow-Headers", "origin, x-mime-type, x-requested-with, x-file-name, content-type");
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "OPTIONS, HEAD, GET, POST, PUT, DELETE");
+        response.setHeader("Access-Control-Allow-Headers", "origin, x-mime-type, x-requested-with, x-file-name, content-type");
     }
 
     private static Promise<Boolean> createImageProcessPromise(final ImageProcessRequest imageProcessRequest) {
