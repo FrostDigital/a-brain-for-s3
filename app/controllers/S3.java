@@ -44,8 +44,7 @@ public class S3 extends Controller {
             return notFound("Preset(s) " + presetNames + " does not exist");
         }
 
-        cors(response());
-
+		
         final List<ImageProcessRequest> imageProcessRequests = new ArrayList<ImageProcessRequest>();
         List<Promise<Boolean>> tmpPromises = new ArrayList<Promise<Boolean>>();
 
@@ -57,11 +56,14 @@ public class S3 extends Controller {
         }
 
         Promise<List<Boolean>> promises = F.Promise.waitAll(tmpPromises);
-
+		
+		final Http.Response resp = response();
+		
         F.Promise<Result> result = promises.map(new F.Function<List<Boolean>, Result>() {
             @Override
             public Result apply(List<Boolean> responses) throws Throwable {
                 //for(Boolean success : responses) { }
+				cors(resp);
                 return ok(Json.toJson(imageProcessRequests));
             }
         });
