@@ -54,7 +54,7 @@ public class S3 extends Controller {
             }
         }
 
-        Promise<List<Boolean>> promises = F.Promise.waitAll(tmpPromises);
+        Promise<List<Boolean>> promises = Promise.waitAll(tmpPromises.toArray( new Promise[]{} ));
 		
 		final Http.Response resp = response();
 		

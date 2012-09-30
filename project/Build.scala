@@ -15,7 +15,6 @@ object ApplicationBuild extends Build {
     )
 
     val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
-      //resolvers += "SpringSource repo" at "http://repository.springsource.com/maven/bundles/external"
     )
 
 }
