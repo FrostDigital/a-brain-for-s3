@@ -18,9 +18,6 @@ public class S3Client {
 
     public static void uploadFile(ProcessedImage processedImage, ImageProcessRequest imageProcessRequest) throws IOException {
         Long start = System.currentTimeMillis();
-
-        Logger.debug("Uploading " + imageProcessRequest.generatedFilename);
-
         InputStream inputStream = new FileInputStream(processedImage.image);
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -35,7 +32,7 @@ public class S3Client {
 
         inputStream.close();
 
-        Logger.debug("Finished uploading " + imageProcessRequest.generatedFilename + " (" + (System.currentTimeMillis() - start) + " ms)");
+        Logger.debug("Uploaded " + imageProcessRequest.generatedFilename + " to S3 (" + (System.currentTimeMillis() - start) + " ms)");
     }
 
 }

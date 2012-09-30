@@ -30,7 +30,9 @@ public class ImgScalrProcessor implements ImageProcessor {
 
     @Override
     public ProcessedImage process(ImageProcessRequest imageProcessRequest) throws IOException {
+        Long start = System.currentTimeMillis();
         BufferedImage img = ImageIO.read(imageProcessRequest.file);
+        Logger.debug("Finished reading file to memory " + imageProcessRequest.generatedFilename + " (" + (System.currentTimeMillis() - start) + " ms)");
 
         Logger.trace(img.toString() + "\n" + img.getColorModel().toString());
 
