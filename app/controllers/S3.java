@@ -27,10 +27,7 @@ public class S3 extends Controller {
     }
 
     public static Result upload(String bucketName, String presetNames) {
-        // TODO: Stream body
-        // http://stackoverflow.com/questions/12066993/uploading-file-as-stream-in-play-framework-2-0?lq=1
-        // http://stackoverflow.com/questions/11468768/why-makes-calling-error-or-done-in-a-bodyparsers-iteratee-the-request-hang-in-p
-        // http://www.infoq.com/presentations/Play-I-ll-See-Your-Async-and-Raise-You-Reactive
+        // TODO: Stream body http://stackoverflow.com/questions/12066993/uploading-file-as-stream-in-play-framework-2-0?lq=1
 
         // Validate request
         Bucket bucket = Bucket.getBucket(bucketName);
@@ -94,7 +91,6 @@ public class S3 extends Controller {
         response().setHeader("Access-Control-Allow-Methods", "OPTIONS, HEAD, GET, POST, PUT, DELETE");
         response().setHeader("Access-Control-Allow-Headers", "origin, x-mime-type, x-requested-with, x-file-name, content-type");
     }
-
 
     private static Promise<Boolean> createImageProcessPromise(final ImageProcessRequest imageProcessRequest) {
         return Akka.future(new Callable<Boolean>() {
