@@ -2,6 +2,7 @@ package org.brains3;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import play.Logger;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,6 +17,10 @@ import java.io.InputStream;
 public class S3Client {
 
     public static void uploadFile(ProcessedImage processedImage, ImageProcessRequest imageProcessRequest) throws IOException {
+        Long start = System.currentTimeMillis();
+
+        Logger.debug("Uploading " + imageProcessRequest.generatedFilename);
+
         InputStream inputStream = new FileInputStream(processedImage.image);
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -29,6 +34,8 @@ public class S3Client {
         //processedImage.url = bucket.publicUrl + processedImage.generatedFilename;
 
         inputStream.close();
+
+        Logger.debug("Finished uploading " + imageProcessRequest.generatedFilename + " (" + (System.currentTimeMillis() - start) + " ms)");
     }
 
 }

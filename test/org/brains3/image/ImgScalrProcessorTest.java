@@ -42,7 +42,7 @@ public class ImgScalrProcessorTest {
     public void testProcess_JPGtoPNG() throws Exception {
         // GIVEN
         File img = readTestImage("./test/large.jpg");
-        Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
+        Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.QUALITY,
                 "{uid}.png", FileFormat.PNG, 100);
         ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName(), "foo");
 
