@@ -12,6 +12,8 @@ import play.Logger;
 import play.libs.Akka;
 
 import java.io.IOException;
+import static akka.pattern.Patterns.ask;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -43,10 +45,11 @@ public class ImageProcessorActor extends UntypedActor {
         else {
             unhandled(o);
         }
+        getSender().tell("message");
     }
 
     public static void processImage(ImageProcessRequest processRequest) {
-        instance.tell(processRequest);
+        ask(instance, processRequest, 10000L);
     }
 
 }
