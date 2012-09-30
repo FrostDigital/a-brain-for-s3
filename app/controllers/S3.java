@@ -21,7 +21,6 @@ import java.util.concurrent.Callable;
 public class S3 extends Controller {
 
     public static Result preflightRequest(String bucket, String preset) {
-        // Handle request when browsers checks if CORS is possible
         cors(response());
         return ok();
     }
