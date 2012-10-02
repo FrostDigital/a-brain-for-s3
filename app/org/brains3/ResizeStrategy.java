@@ -10,6 +10,8 @@ import org.apache.commons.lang.StringUtils;
  */
 public enum ResizeStrategy {
     FIT,
+    FIT_TO_WIDTH,
+    FIT_TO_HEIGHT,
     STRETCH,
     PAD,
     CROP,

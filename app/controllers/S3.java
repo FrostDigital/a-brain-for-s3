@@ -11,6 +11,9 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -43,13 +46,16 @@ public class S3 extends Controller {
             return notFound("Preset(s) " + presetNames + " does not exist");
         }
 
-		
         final List<ImageProcessRequest> imageProcessRequests = new ArrayList<ImageProcessRequest>();
+        final List<BufferedImage> images = new ArrayList<BufferedImage>();
         List<Promise<Boolean>> tmpPromises = new ArrayList<Promise<Boolean>>();
 
+
         for(Http.MultipartFormData.FilePart filePart : request().body().asMultipartFormData().getFiles()) {
+            BufferedImage img = readImage(filePart.getFile(), filePart.getFilename());
+            images.add(img);
             for(ImageProcessRequest req : prepareProcessing(bucket, presets, filePart))  {
-                tmpPromises.add(createImageProcessPromise(req));
+                tmpPromises.add(createImageProcessPromise(req, img));
                 imageProcessRequests.add(req);
             }
         }
@@ -63,6 +69,7 @@ public class S3 extends Controller {
             public Result apply(List<Boolean> responses) throws Throwable {
                 //for(Boolean success : responses) { }
 				cors(resp);
+                flush(images);
                 return ok(Json.toJson(imageProcessRequests));
             }
         });
@@ -93,7 +100,7 @@ public class S3 extends Controller {
         response.setHeader("Access-Control-Allow-Headers", "origin, x-mime-type, x-requested-with, x-file-name, content-type");
     }
 
-    private static Promise<Boolean> createImageProcessPromise(final ImageProcessRequest imageProcessRequest) {
+    private static Promise<Boolean> createImageProcessPromise(final ImageProcessRequest imageProcessRequest, final BufferedImage image) {
         return Akka.future(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
@@ -102,7 +109,7 @@ public class S3 extends Controller {
                 Logger.debug("------------- Start processing " + imageProcessRequest.generatedFilename);
 
                 try {
-                    ProcessedImage processedImage = new ImgScalrProcessor().process(imageProcessRequest);
+                    ProcessedImage processedImage = new ImgScalrProcessor().process(imageProcessRequest, image);
                     S3Client.uploadFile(processedImage, imageProcessRequest);
                 } catch (IOException e) {
                     Logger.warn("Could not process or upload image: " + e.getMessage());
@@ -114,5 +121,24 @@ public class S3 extends Controller {
                 return true;
             }
         });
+    }
+
+    private static BufferedImage readImage(File file, String originalFilename) {
+        BufferedImage bufferedImage = null;
+        try {
+            Long start = System.currentTimeMillis();
+            bufferedImage = ImageIO.read(file);
+            Logger.debug("Finished reading file to memory " + originalFilename + " (" + (System.currentTimeMillis() - start) + " ms)");
+        } catch (IOException e) {
+            Logger.warn("Could not read Image: " + originalFilename);
+        }
+
+        return bufferedImage;
+    }
+
+    private static void flush(List<BufferedImage> images) {
+        for (BufferedImage img : images) {
+            img.flush();
+        }
     }
 }

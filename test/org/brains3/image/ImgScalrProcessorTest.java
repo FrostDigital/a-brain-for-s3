@@ -4,7 +4,10 @@ import org.brains3.*;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 import static org.junit.Assert.*;
 
@@ -21,15 +24,35 @@ public class ImgScalrProcessorTest {
     @Test
     public void testProcess_JPGtoJPG() throws Exception {
         // GIVEN
-        File img = readTestImage("./test/large.jpg");
+        BufferedImage img = readTestImage("./test/large.jpg");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
                 "{uid}.jpg", FileFormat.JPG, 50);
 
         ImageProcessRequest req = new ImageProcessRequest(
-                preset, bucket(), img, img.getName(), "foo");
+                preset, bucket(), null, "large.jpg", "foo");
 
         // WHEN
-        ProcessedImage processedImage = processor.process(req);
+        ProcessedImage processedImage = processor.process(req, img);
+
+        // THEN
+        assertNotNull(processedImage);
+        assertTrue(processedImage.image.exists());
+
+        openImage(processedImage.image.getAbsolutePath());
+    }
+
+    @Test
+    public void testProcess_JPGtoJPG_fillCrop() throws Exception {
+        // GIVEN
+        BufferedImage img = readTestImage("./test/large.jpg");
+        Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FILLCROP, ScaleMethod.AUTOMATIC,
+                "{uid}.jpg", FileFormat.JPG, 50);
+
+        ImageProcessRequest req = new ImageProcessRequest(
+                preset, bucket(), null, "large.jpg", "foo");
+
+        // WHEN
+        ProcessedImage processedImage = processor.process(req, img);
 
         // THEN
         assertNotNull(processedImage);
@@ -41,13 +64,13 @@ public class ImgScalrProcessorTest {
     @Test
     public void testProcess_JPGtoPNG() throws Exception {
         // GIVEN
-        File img = readTestImage("./test/large.jpg");
+        BufferedImage img = readTestImage("./test/large.jpg");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.QUALITY,
                 "{uid}.png", FileFormat.PNG, 100);
-        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName(), "foo");
+        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), null, "large.jpg", "foo");
 
         // WHEN
-        ProcessedImage processedImage = processedImage = processor.process(req);
+        ProcessedImage processedImage = processedImage = processor.process(req, img);
 
         // THEN
         assertNotNull(processedImage);
@@ -60,15 +83,15 @@ public class ImgScalrProcessorTest {
     @Ignore
     public void testProcess_JPGtoBMP() throws Exception {
         // GIVEN
-        File img = readTestImage("./test/large.jpg");
+        BufferedImage img = readTestImage("./test/large.jpg");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
                 "{uid}.bmp", FileFormat.BMP, 100);
         ImageProcessRequest req = new ImageProcessRequest(
-                preset, bucket(), img, img.getName(), "foo");
+                preset, bucket(), null, "large.jpg", "foo");
 
 
         // WHEN
-        ProcessedImage processedImage = processedImage = processor.process(req);
+        ProcessedImage processedImage = processedImage = processor.process(req, img);
 
         // THEN
         assertNotNull(processedImage);
@@ -81,13 +104,14 @@ public class ImgScalrProcessorTest {
     @Ignore
     public void testProcess_JPGtoGIF() throws Exception {
         // GIVEN
-        File img = readTestImage("./test/large.jpg");
+        BufferedImage img = readTestImage("./test/large.jpg");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
                 "{uid}.gif", FileFormat.GIF, 100);
-        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName(), "foo");
+        ImageProcessRequest req = new ImageProcessRequest(
+                preset, bucket(), null, "large.jpg", "foo");
 
         // WHEN
-        ProcessedImage processedImage = processedImage = processor.process(req);
+        ProcessedImage processedImage = processedImage = processor.process(req, img);
 
         // THEN
         assertNotNull(processedImage);
@@ -100,13 +124,14 @@ public class ImgScalrProcessorTest {
     @Ignore
     public void testProcess_JPGtoTIF() throws Exception {
         // GIVEN
-        File img = readTestImage("./test/large.jpg");
+        BufferedImage img = readTestImage("./test/large.jpg");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
                 "{uid}.tiff", FileFormat.TIFF, 100);
-        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName(), "foo");
+        ImageProcessRequest req = new ImageProcessRequest(
+                preset, bucket(), null, "large.jpg", "foo");
 
         // WHEN
-        ProcessedImage processedImage = processedImage = processor.process(req);
+        ProcessedImage processedImage = processedImage = processor.process(req, img);
 
         // THEN
         assertNotNull(processedImage);
@@ -118,13 +143,14 @@ public class ImgScalrProcessorTest {
     @Test
     public void testProcess_PNGtoJPG() throws Exception {
         // GIVEN
-        File img = readTestImage("./test/large.png");
+        BufferedImage img = readTestImage("./test/large.png");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
                 "{uid}.jpg", FileFormat.JPG, 100);
-        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName(), "foo");
+        ImageProcessRequest req = new ImageProcessRequest(
+                preset, bucket(), null, "large.jpg", "foo");
 
         // WHEN
-        ProcessedImage processedImage = processedImage = processor.process(req);
+        ProcessedImage processedImage = processedImage = processor.process(req, img);
 
         // THEN
         assertNotNull(processedImage);
@@ -136,13 +162,14 @@ public class ImgScalrProcessorTest {
     @Test
     public void testProcess_PNGAlphaToJPG() throws Exception {
         // GIVEN
-        File img = readTestImage("./test/alpha.png");
+        BufferedImage img = readTestImage("./test/alpha.png");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC,
                 "{uid}.jpg", FileFormat.JPG, 100);
-        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName(), "foo");
+        ImageProcessRequest req = new ImageProcessRequest(
+                preset, bucket(), null, "large.jpg", "foo");
 
         // WHEN
-        ProcessedImage processedImage = processedImage = processor.process(req);
+        ProcessedImage processedImage = processedImage = processor.process(req, img);
 
         // THEN
         assertNotNull(processedImage);
@@ -154,12 +181,13 @@ public class ImgScalrProcessorTest {
     @Test
     public void testProcess_PNGAlphaToJPG2() throws Exception {
         // GIVEN
-        File img = readTestImage("./test/alpha2.png");
+        BufferedImage img = readTestImage("./test/alpha2.png");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC, "{uid}.jpg", FileFormat.JPG, 100);
-        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName(), "foo");
+        ImageProcessRequest req = new ImageProcessRequest(
+                preset, bucket(), null, "large.jpg", "foo");
 
         // WHEN
-        ProcessedImage processedImage = processedImage = processor.process(req);
+        ProcessedImage processedImage = processedImage = processor.process(req, img);
 
         // THEN
         assertNotNull(processedImage);
@@ -171,12 +199,13 @@ public class ImgScalrProcessorTest {
     @Test
     public void testProcess_PNGAlphaToPNG() throws Exception {
         // GIVEN
-        File img = readTestImage("./test/alpha.png");
+        BufferedImage img = readTestImage("./test/alpha.png");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC, "{uid}.png", FileFormat.PNG, 100);
-        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), img, img.getName(), "foo");
+        ImageProcessRequest req = new ImageProcessRequest(
+                preset, bucket(), null, "large.jpg", "foo");
 
         // WHEN
-        ProcessedImage processedImage = processedImage = processor.process(req);
+        ProcessedImage processedImage = processedImage = processor.process(req, img);
 
         // THEN
         assertNotNull(processedImage);
@@ -191,12 +220,14 @@ public class ImgScalrProcessorTest {
         Process p = r.exec("open " + absolutePath);
     }
 
-    private File readTestImage(String filename) {
-        File f = new File(filename);
-        if(!f.exists()) {
+    private BufferedImage readTestImage(String filename) {
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(new File(filename));
+        } catch (IOException e) {
             fail("Test image does not seem to exist");
         }
-        return f;
+        return img;
     }
 
     private Bucket bucket() {

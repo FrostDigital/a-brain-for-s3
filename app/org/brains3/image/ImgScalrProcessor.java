@@ -29,11 +29,8 @@ import static org.imgscalr.Scalr.resize;
 public class ImgScalrProcessor implements ImageProcessor {
 
     @Override
-    public ProcessedImage process(ImageProcessRequest imageProcessRequest) throws IOException {
-        Long start = System.currentTimeMillis();
-        BufferedImage img = ImageIO.read(imageProcessRequest.file);
-        Logger.debug("Finished reading file to memory " + imageProcessRequest.generatedFilename + " (" + (System.currentTimeMillis() - start) + " ms)");
-
+    public ProcessedImage process(ImageProcessRequest imageProcessRequest, BufferedImage img) throws IOException {
+        //BufferedImage img = ImageIO.read(imageProcessRequest.file);
         Logger.trace(img.toString() + "\n" + img.getColorModel().toString());
 
         if(img.getColorModel().hasAlpha() && imageProcessRequest.preset.format == FileFormat.JPG) {
@@ -49,7 +46,7 @@ public class ImgScalrProcessor implements ImageProcessor {
             img = tmpImg;
         }
 
-        img = resize(img, getScalrMethod(imageProcessRequest.preset), imageProcessRequest.preset.width, imageProcessRequest.preset.height);
+        img = resize(img, getScalrMethod(imageProcessRequest.preset), getScalrMode(imageProcessRequest.preset), imageProcessRequest.preset.width, imageProcessRequest.preset.height);
 
         ProcessedImage processedImage = new ProcessedImage(
                 write(img, imageProcessRequest.preset),
@@ -115,6 +112,21 @@ public class ImgScalrProcessor implements ImageProcessor {
         }
 
         return method;
+    }
+
+    private Scalr.Mode getScalrMode(Preset preset) {
+        Scalr.Mode mode = Scalr.Mode.AUTOMATIC;
+
+        switch (preset.resizeStrategy){
+            case FIT: mode = Scalr.Mode.AUTOMATIC; break;
+            case FIT_TO_WIDTH: mode = Scalr.Mode.FIT_TO_WIDTH; break;
+            case FIT_TO_HEIGHT: mode = Scalr.Mode.FIT_TO_HEIGHT; break;
+            case STRETCH: mode = Scalr.Mode.FIT_EXACT; break;
+            case PAD: mode = Scalr.Mode.FIT_TO_WIDTH; break;
+            case CROP: mode = Scalr.Mode.FIT_TO_WIDTH; break;
+        }
+
+        return mode;
     }
 
 }

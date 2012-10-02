@@ -3,6 +3,7 @@ package org.brains3.image;
 import org.brains3.ImageProcessRequest;
 import org.brains3.ProcessedImage;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 /**
@@ -13,6 +14,6 @@ import java.io.IOException;
  */
 public interface ImageProcessor {
 
-    public ProcessedImage process(ImageProcessRequest imageProcessRequest) throws IOException;
+    public ProcessedImage process(ImageProcessRequest imageProcessRequest, BufferedImage img) throws IOException;
 
 }
