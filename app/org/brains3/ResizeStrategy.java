@@ -14,6 +14,7 @@ public enum ResizeStrategy {
     FIT_TO_HEIGHT,
     STRETCH,
     PAD,
+    CENTER_CROP,
     CROP,
     FILLCROP;
 

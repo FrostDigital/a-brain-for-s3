@@ -16,7 +16,7 @@ public class FilenameGenerator {
     }
 
     public static String uid() {
-        return UUID.randomUUID().getMostSignificantBits() + "";
+        return UUID.randomUUID().toString();
     }
 
     private static String removeFileExt(String filename) {

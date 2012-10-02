@@ -1,9 +1,6 @@
 package org.brains3.image;
 
-import org.brains3.FileFormat;
-import org.brains3.ImageProcessRequest;
-import org.brains3.Preset;
-import org.brains3.ProcessedImage;
+import org.brains3.*;
 import org.imgscalr.Scalr;
 import play.Logger;
 
@@ -123,7 +120,7 @@ public class ImgScalrProcessor implements ImageProcessor {
             case FIT_TO_HEIGHT: mode = Scalr.Mode.FIT_TO_HEIGHT; break;
             case STRETCH: mode = Scalr.Mode.FIT_EXACT; break;
             case PAD: mode = Scalr.Mode.FIT_TO_WIDTH; break;
-            case CROP: mode = Scalr.Mode.FIT_TO_WIDTH; break;
+            case CENTER_CROP: mode = Scalr.Mode.CROP; break;
         }
 
         return mode;

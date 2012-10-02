@@ -197,7 +197,7 @@ public class ImgScalrProcessorTest {
     }
 
     @Test
-    public void testProcess_PNGAlphaToPNG() throws Exception {
+         public void testProcess_PNGAlphaToPNG() throws Exception {
         // GIVEN
         BufferedImage img = readTestImage("./test/alpha.png");
         Preset preset = new Preset("thumb", 150, 150, ResizeStrategy.FIT, ScaleMethod.AUTOMATIC, "{uid}.png", FileFormat.PNG, 100);
@@ -214,6 +214,75 @@ public class ImgScalrProcessorTest {
         openImage(processedImage.image.getAbsolutePath());
     }
 
+    @Test
+    public void testProcess_fitToHeight() throws Exception {
+        // GIVEN
+        BufferedImage img = readTestImage("./test/alpha.png");
+        Preset preset = new Preset("thumb", 10, 150, ResizeStrategy.FIT_TO_HEIGHT, ScaleMethod.AUTOMATIC, "{uid}.png", FileFormat.PNG, 100);
+        ImageProcessRequest req = new ImageProcessRequest(
+                preset, bucket(), null, "large.jpg", "foo");
+
+        // WHEN
+        ProcessedImage processedImage = processedImage = processor.process(req, img);
+
+        // THEN
+        assertNotNull(processedImage);
+        assertTrue(processedImage.image.exists());
+        assertWidthAndHeight(processedImage.image, null, 150);
+    }
+
+    @Test
+    public void testProcess_fitToWidth() throws Exception {
+        // GIVEN
+        BufferedImage img = readTestImage("./test/alpha.png");
+        Preset preset = new Preset("thumb", 10, 150, ResizeStrategy.FIT_TO_WIDTH, ScaleMethod.AUTOMATIC, "{uid}.png", FileFormat.PNG, 100);
+        ImageProcessRequest req = new ImageProcessRequest(
+                preset, bucket(), null, "large.jpg", "foo");
+
+        // WHEN
+        ProcessedImage processedImage = processedImage = processor.process(req, img);
+
+        // THEN
+        assertNotNull(processedImage);
+        assertTrue(processedImage.image.exists());
+        assertWidthAndHeight(processedImage.image, 10, null);
+    }
+
+    @Test
+    public void testProcess_centerCrop() throws Exception {
+        // GIVEN
+        BufferedImage img = readTestImage("./test/large.jpg");
+        Preset preset = new Preset("thumb", 220, 165, ResizeStrategy.CENTER_CROP, ScaleMethod.AUTOMATIC, "{uid}.png", FileFormat.PNG, 100);
+        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), null, "large.jpg", "foo");
+
+        // WHEN
+        ProcessedImage processedImage = processedImage = processor.process(req, img);
+
+        // THEN
+        assertNotNull(processedImage);
+        assertTrue(processedImage.image.exists());
+        assertWidthAndHeight(processedImage.image, 220, 165);
+
+        openImage(processedImage.image.getAbsolutePath());
+    }
+
+
+    private static void assertWidthAndHeight(File file, Integer width, Integer height) {
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(file);
+        } catch (IOException e) {
+            fail("could not read file ");
+        }
+
+        if(width != null) {
+            assertEquals(width.intValue(), img.getWidth());
+        }
+
+        if(height != null) {
+            assertEquals(height.intValue(), img.getHeight());
+        }
+    }
 
     public void openImage(String absolutePath) throws Exception {
         Runtime r = Runtime.getRuntime();
