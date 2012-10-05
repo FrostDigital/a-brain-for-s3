@@ -1626,10 +1626,11 @@ public class Scalr {
 
 
                 int widthRatio = (int) (currentWidth * widthHeightRatio);
+                int heightRatio = (int) (currentHeight * widthHeightRatio);
 
                 int cropWidth, cropHeight, xOffset, yOffset;
 
-                if(widthRatio < currentHeight) {
+                if(widthRatio < heightRatio) {
                     // Keep width intact
                     cropWidth = currentWidth;
                     cropHeight = (int) (currentWidth * heightWidthRatio);

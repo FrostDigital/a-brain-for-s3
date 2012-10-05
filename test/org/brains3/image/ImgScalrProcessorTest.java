@@ -249,7 +249,7 @@ public class ImgScalrProcessorTest {
     }
 
     @Test
-    public void testProcess_centerCrop() throws Exception {
+    public void testProcess_centerCrop_1() throws Exception {
         // GIVEN
         BufferedImage img = readTestImage("./test/large.jpg");
         Preset preset = new Preset("thumb", 220, 165, ResizeStrategy.CENTER_CROP, ScaleMethod.AUTOMATIC, "{uid}.png", FileFormat.PNG, 100);
@@ -265,6 +265,25 @@ public class ImgScalrProcessorTest {
 
         openImage(processedImage.image.getAbsolutePath());
     }
+
+    @Test
+    public void testProcess_centerCrop_2() throws Exception {
+        // GIVEN
+        BufferedImage img = readTestImage("./test/large.jpg");
+        Preset preset = new Preset("thumb", 50, 200, ResizeStrategy.CENTER_CROP, ScaleMethod.AUTOMATIC, "{uid}.png", FileFormat.PNG, 100);
+        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), null, "large.jpg", "foo");
+
+        // WHEN
+        ProcessedImage processedImage = processedImage = processor.process(req, img);
+
+        // THEN
+        assertNotNull(processedImage);
+        assertTrue(processedImage.image.exists());
+        assertWidthAndHeight(processedImage.image, 50, 200);
+
+        openImage(processedImage.image.getAbsolutePath());
+    }
+
 
 
     private static void assertWidthAndHeight(File file, Integer width, Integer height) {
