@@ -120,7 +120,7 @@ public class ImgScalrProcessor implements ImageProcessor {
             case FIT_TO_HEIGHT: mode = Scalr.Mode.FIT_TO_HEIGHT; break;
             case STRETCH: mode = Scalr.Mode.FIT_EXACT; break;
             case PAD: mode = Scalr.Mode.FIT_TO_WIDTH; break;
-            case CENTER_CROP: mode = Scalr.Mode.CROP; break;
+            case CENTER_CROP: mode = Scalr.Mode.CENTER_CROP; break;
         }
 
         return mode;

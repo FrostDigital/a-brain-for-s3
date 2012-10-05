@@ -15,28 +15,12 @@
  */
 package org.imgscalr;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
-import java.awt.Transparency;
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.AreaAveragingScaleFilter;
-import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
-import java.awt.image.ColorConvertOp;
-import java.awt.image.ColorModel;
-import java.awt.image.ConvolveOp;
-import java.awt.image.ImagingOpException;
-import java.awt.image.IndexColorModel;
-import java.awt.image.Kernel;
-import java.awt.image.RasterFormatException;
-import java.awt.image.RescaleOp;
-
-import javax.imageio.ImageIO;
+import java.awt.image.*;
 
 /**
  * Class used to implement performant, high-quality and intelligent image
@@ -461,7 +445,7 @@ public class Scalr {
          * dimensions for the resultant image that best-fit within the given
          * height and width, and then crop it to fit within the bounding box.
          */
-        CROP;
+        CENTER_CROP;
     }
 
     /**
@@ -1631,43 +1615,47 @@ public class Scalr {
                     log(1,
                             "Auto-Corrected targetHeight [from=%d to=%d] to honor image proportions.",
                             originalTargetHeight, targetHeight);
-            } else if (resizeMode == Mode.CROP) {
+            } else if (resizeMode == Mode.CENTER_CROP) {
                 // If already right size return
                 if (targetWidth == currentWidth && targetHeight == currentHeight)
                     return src;
 
-                int originalTargetWidth = targetWidth;
-                int originalTargetHeight = targetHeight;
+                // ratio
+                float widthHeightRatio = ((float) targetWidth) / targetHeight;
+                float heightWidthRatio = ((float) targetHeight) / targetWidth;
 
-                // Do we need to crop
-                int cropWidth = currentWidth;
-                int cropHeight = currentHeight;
-                if (ratio != 1) {
-                    // Calculate crop x offset and new original width to use when cropping
-                    int xOffset = 0;
-                    if (ratio < 1) {
-                        cropWidth = Math.round((float)currentWidth * ratio);
-                        xOffset = Math.round((float)(currentWidth - cropWidth) / 2f);
-                    }
 
-                    // Calculate crop y offset and new original height to use when cropping
-                    int yOffset = 0;
-                    if (ratio > 1) {
-                        cropHeight = Math.round((float)currentHeight / ratio);
-                        yOffset = Math.round((float)(currentHeight - cropHeight) / 2f);
-                    }
-                    // Crop to fit within the target height and width
-                    src = crop(src, xOffset, yOffset, cropWidth, cropHeight);
+                int widthRatio = (int) (currentWidth * widthHeightRatio);
+
+                int cropWidth, cropHeight, xOffset, yOffset;
+
+                if(widthRatio < currentHeight) {
+                    // Keep width intact
+                    cropWidth = currentWidth;
+                    cropHeight = (int) (currentWidth * heightWidthRatio);
+
+                    xOffset = 0;
+                    yOffset = Math.round((float)(currentHeight - cropHeight) / 2f);
+                }
+                else {
+                    // Keep height intact
+                    cropHeight = currentHeight;
+                    cropWidth = (int) (cropHeight * widthHeightRatio);
+
+                    yOffset = 0;
+                    xOffset = Math.round((float)(currentWidth - cropWidth) / 2f);
                 }
 
+                src = crop(src, xOffset, yOffset, cropWidth, cropHeight);
+
                 // Calculate resize
-                float cropRatio = Math.max((float)targetWidth / cropWidth, (float)targetHeight / cropHeight);
+                /*float cropRatio = Math.max((float)targetWidth / cropWidth, (float)targetHeight / cropHeight);
                 targetWidth  = Math.round((float)cropWidth * cropRatio);
                 targetHeight = Math.round((float)cropHeight * cropRatio);
 
                 // If the calculated size is bigger than what was sent in, return what was sent in instead.
                 targetWidth = (int)Math.ceil(targetWidth > originalTargetWidth ? originalTargetWidth : targetWidth);
-                targetHeight = (int)Math.ceil(targetHeight > originalTargetHeight ? originalTargetHeight : targetHeight);
+                targetHeight = (int)Math.ceil(targetHeight > originalTargetHeight ? originalTargetHeight : targetHeight);*/
 
             } else {
                 // First make sure we need to do any work in the first place
