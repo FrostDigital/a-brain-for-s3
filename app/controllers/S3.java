@@ -2,8 +2,10 @@ package controllers;
 
 import org.apache.commons.lang.StringUtils;
 import org.brains3.*;
+import org.brains3.image.ExifUtil;
 import org.brains3.image.ImgScalrProcessor;
 import org.codehaus.jackson.JsonNode;
+import org.imgscalr.Scalr;
 import play.Logger;
 import play.cache.Cache;
 import play.libs.Akka;
@@ -56,7 +58,17 @@ public class S3 extends Controller {
 
 
         for(Http.MultipartFormData.FilePart filePart : request().body().asMultipartFormData().getFiles()) {
+
+            Integer orientation = ExifUtil.readImageOrientation(filePart.getFile());
+
+            // TODO: Refactor!
+
             BufferedImage img = readImage(filePart.getFile(), filePart.getFilename());
+
+            if(orientation == 8) {
+                img = Scalr.rotate(img, Scalr.Rotation.CW_270);
+            }
+
             images.add(img);
             for(ImageProcessRequest req : prepareProcessing(bucket, presets, filePart))  {
                 tmpPromises.add(createImageProcessPromise(req, img));

@@ -1,6 +1,9 @@
 package org.brains3.image;
 
-import org.brains3.*;
+import org.brains3.FileFormat;
+import org.brains3.ImageProcessRequest;
+import org.brains3.Preset;
+import org.brains3.ProcessedImage;
 import org.imgscalr.Scalr;
 import play.Logger;
 
