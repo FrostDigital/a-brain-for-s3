@@ -58,15 +58,18 @@ public class S3 extends Controller {
 
 
         for(Http.MultipartFormData.FilePart filePart : request().body().asMultipartFormData().getFiles()) {
-
             Integer orientation = ExifUtil.readImageOrientation(filePart.getFile());
-
-            // TODO: Refactor!
-
             BufferedImage img = readImage(filePart.getFile(), filePart.getFilename());
 
-            if(orientation == 8) {
-                img = Scalr.rotate(img, Scalr.Rotation.CW_270);
+            Scalr.Rotation rotation = null;
+            switch(orientation) {
+                case 3: rotation = Scalr.Rotation.CW_180; break;
+                case 6: rotation = Scalr.Rotation.CW_90; break;
+                case 8: rotation = Scalr.Rotation.CW_270; break;
+            }
+
+            if(rotation != null) {
+                img = Scalr.rotate(img, rotation);
             }
 
             images.add(img);
