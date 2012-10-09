@@ -70,6 +70,12 @@ public class S3 extends Controller {
                 //for(Boolean success : responses) { }
 				cors(resp);
                 flush(images);
+
+                // TODO: Make this configurable
+                // Set content type to text/plain to fix issue with IE:
+                // https://github.com/valums/file-uploader#internet-explorer-limitations
+                resp.setContentType("text/plain");
+
                 return ok(Json.toJson(imageProcessRequests));
             }
         });
