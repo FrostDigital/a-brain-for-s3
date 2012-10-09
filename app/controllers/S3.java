@@ -91,7 +91,8 @@ public class S3 extends Controller {
         return async(result);
     }
 
-    public static Result history(String id) {
+    public static Result result(String id) {
+        cors(response());
         return ok(getCachedResult(id));
     }
 
