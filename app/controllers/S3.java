@@ -1,8 +1,11 @@
 package controllers;
 
+import org.apache.commons.lang.StringUtils;
 import org.brains3.*;
 import org.brains3.image.ImgScalrProcessor;
+import org.codehaus.jackson.JsonNode;
 import play.Logger;
+import play.cache.Cache;
 import play.libs.Akka;
 import play.libs.F;
 import play.libs.F.Promise;
@@ -29,13 +32,14 @@ public class S3 extends Controller {
     }
 
     public static Result upload(String bucketName, String presetNames) {
-        // TODO: Stream body http://stackoverflow.com/questions/12066993/uploading-file-as-stream-in-play-framework-2-0?lq=1
-
         // Validate request
         Bucket bucket = Bucket.getBucket(bucketName);
         if(bucket == null) {
             return notFound("Bucket " + bucketName + " does not exist");
         }
+
+        final String id = request().queryString().containsKey("id")
+                ? request().queryString().get("id")[0] : null ;
 
         Set<Preset> presets = new HashSet<Preset>();
         for(String p : presetNames.split(",")) {
@@ -63,11 +67,10 @@ public class S3 extends Controller {
         Promise<List<Boolean>> promises = Promise.waitAll(tmpPromises.toArray( new Promise[]{} ));
 		
 		final Http.Response resp = response();
-		
+
         F.Promise<Result> result = promises.map(new F.Function<List<Boolean>, Result>() {
             @Override
             public Result apply(List<Boolean> responses) throws Throwable {
-                //for(Boolean success : responses) { }
 				cors(resp);
                 flush(images);
 
@@ -76,11 +79,20 @@ public class S3 extends Controller {
                 // https://github.com/valums/file-uploader#internet-explorer-limitations
                 resp.setContentType("text/plain");
 
-                return ok(Json.toJson(imageProcessRequests));
+                JsonNode json = Json.toJson(imageProcessRequests);
+
+                if(!StringUtils.isBlank(id)) {
+                    cacheResult(id, json);
+                }
+                return ok(json);
             }
         });
 
         return async(result);
+    }
+
+    public static Result history(String id) {
+        return ok(getCachedResult(id));
     }
 
     private static List<ImageProcessRequest> prepareProcessing(Bucket bucket, Set<Preset> presets, Http.MultipartFormData.FilePart filePart) {
@@ -146,5 +158,16 @@ public class S3 extends Controller {
         for (BufferedImage img : images) {
             img.flush();
         }
+    }
+
+    private static final String RESULT_CACHE_PREFIX = "processed-image.";
+    private static final int CACHE_RESULT_EXPIRES = 60*2; // 2 min
+
+    private static void cacheResult(String key, JsonNode json) {
+        Cache.set(RESULT_CACHE_PREFIX + key, json, CACHE_RESULT_EXPIRES);
+    }
+
+    private static JsonNode getCachedResult(String key) {
+        return (JsonNode) Cache.get(RESULT_CACHE_PREFIX + key);
     }
 }

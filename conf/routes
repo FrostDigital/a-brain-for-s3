@@ -1,22 +1,15 @@
-GET     /                              controllers.Application.index()
-GET     /settings                      controllers.Application.settings()
+GET     /                             controllers.Application.index()
+GET     /settings                     controllers.Application.settings()
 
-GET     /test                           controllers.Application.testUpload()
-GET     /test/:bucket/:preset           controllers.Application.testBucketAndPreset(bucket: String, preset: String)
+GET     /test                         controllers.Application.testUpload()
+GET     /test/:bucket/:preset         controllers.Application.testBucketAndPreset(bucket: String, preset: String)
 
+GET     /s3/history/:id               controllers.S3.history(id: String)
+POST    /s3/:bucket/:preset           controllers.S3.upload(bucket: String, preset: String)
 
-#POST    /s3/jquery-upload/:bucket/:preset           controllers.S3.jqueryUpload(bucket: String, preset: String)
-POST    /s3/:bucket/:preset                         controllers.S3.upload(bucket: String, preset: String)
-
-#GET     /s3/jquery-upload/:bucket/:preset           controllers.S3.preflightRequest(bucket: String, preset: String)
-#OPTIONS /s3/jquery-upload/:bucket/:preset           controllers.S3.preflightRequest(bucket: String, preset: String)
-#HEAD    /s3/jquery-upload/:bucket/:preset           controllers.S3.preflightRequest(bucket: String, preset: String)
 GET     /s3/:bucket/:preset           controllers.S3.preflightRequest(bucket: String, preset: String)
 OPTIONS /s3/:bucket/:preset           controllers.S3.preflightRequest(bucket: String, preset: String)
 HEAD    /s3/:bucket/:preset           controllers.S3.preflightRequest(bucket: String, preset: String)
-
-
-
 
 GET     /assets/*file                 controllers.Assets.at(path="/public", file)
 

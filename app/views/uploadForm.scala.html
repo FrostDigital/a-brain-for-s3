@@ -38,6 +38,9 @@
     <script src="@routes.Assets.at("javascripts/fileuploader.js")" type="text/javascript"></script>
 
     <script>
+
+        $(function() {
+
         var action
          , uploader
          , $result = $('#result')
@@ -83,8 +86,7 @@
             });
         }
 
-        // in your app create uploader as soon as the DOM is ready
-        // don't wait for the window to load
-        window.onload = createUploader;
+            createUploader();
+        });
     </script>
 }
