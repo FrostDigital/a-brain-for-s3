@@ -284,6 +284,42 @@ public class ImgScalrProcessorTest {
         openImage(processedImage.image.getAbsolutePath());
     }
 
+    @Test
+    public void testProcess_centerCrop_3() throws Exception {
+        // GIVEN
+        BufferedImage img = readTestImage("./test/cat.jpeg");
+        Preset preset = new Preset("thumb", 220, 165, ResizeStrategy.CENTER_CROP, ScaleMethod.AUTOMATIC, "{uid}.png", FileFormat.JPG, 100);
+        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), null, "large.jpg", "foo");
+
+        // WHEN
+        ProcessedImage processedImage = processedImage = processor.process(req, img);
+
+        // THEN
+        assertNotNull(processedImage);
+        assertTrue(processedImage.image.exists());
+
+        openImage(processedImage.image.getAbsolutePath());
+    }
+
+    @Test
+    public void testProcess_centerCrop_4() throws Exception {
+        // GIVEN
+        BufferedImage img = readTestImage("./test/cat.jpeg");
+        Preset preset = new Preset("thumb", 800, 600, ResizeStrategy.CENTER_CROP, ScaleMethod.AUTOMATIC, "{uid}.png", FileFormat.JPG, 100);
+        ImageProcessRequest req = new ImageProcessRequest(preset, bucket(), null, "large.jpg", "foo");
+
+        // WHEN
+        ProcessedImage processedImage = processedImage = processor.process(req, img);
+
+        // THEN
+        assertNotNull(processedImage);
+        assertTrue(processedImage.image.exists());
+
+        openImage(processedImage.image.getAbsolutePath());
+    }
+
+
+
 
 
     private static void assertWidthAndHeight(File file, Integer width, Integer height) {

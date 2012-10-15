@@ -1620,43 +1620,31 @@ public class Scalr {
                 if (targetWidth == currentWidth && targetHeight == currentHeight)
                     return src;
 
-                // ratio
                 float widthHeightRatio = ((float) targetWidth) / targetHeight;
-                float heightWidthRatio = ((float) targetHeight) / targetWidth;
 
-
-                int widthRatio = (int) (currentWidth * widthHeightRatio);
-                int heightRatio = (int) (currentHeight * widthHeightRatio);
+                int wRatio = (int) (currentHeight * widthHeightRatio);
+                int hRatio = (int) (currentWidth * (1/widthHeightRatio));
 
                 int cropWidth, cropHeight, xOffset, yOffset;
 
-                if(widthRatio < heightRatio) {
-                    // Keep width intact
-                    cropWidth = currentWidth;
-                    cropHeight = (int) (currentWidth * heightWidthRatio);
-
-                    xOffset = 0;
-                    yOffset = Math.round((float)(currentHeight - cropHeight) / 2f);
-                }
-                else {
+                if(wRatio < currentWidth) {
                     // Keep height intact
                     cropHeight = currentHeight;
-                    cropWidth = (int) (cropHeight * widthHeightRatio);
+                    cropWidth = wRatio;
 
                     yOffset = 0;
                     xOffset = Math.round((float)(currentWidth - cropWidth) / 2f);
                 }
+                else {
+                    // Keep width intact
+                    cropWidth = currentWidth;
+                    cropHeight = hRatio;
+
+                    xOffset = 0;
+                    yOffset = Math.round((float)(currentHeight - cropHeight) / 2f);
+                }
 
                 src = crop(src, xOffset, yOffset, cropWidth, cropHeight);
-
-                // Calculate resize
-                /*float cropRatio = Math.max((float)targetWidth / cropWidth, (float)targetHeight / cropHeight);
-                targetWidth  = Math.round((float)cropWidth * cropRatio);
-                targetHeight = Math.round((float)cropHeight * cropRatio);
-
-                // If the calculated size is bigger than what was sent in, return what was sent in instead.
-                targetWidth = (int)Math.ceil(targetWidth > originalTargetWidth ? originalTargetWidth : targetWidth);
-                targetHeight = (int)Math.ceil(targetHeight > originalTargetHeight ? originalTargetHeight : targetHeight);*/
 
             } else {
                 // First make sure we need to do any work in the first place
