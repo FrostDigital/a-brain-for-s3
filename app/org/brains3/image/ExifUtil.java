@@ -39,7 +39,7 @@ public class ExifUtil {
             orientation = directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);
             /*int width = jpegDirectory.getImageWidth();
             int height = jpegDirectory.getImageHeight();*/
-        } catch (MetadataException me) {
+        } catch (Exception e) {
             Logger.warn("Could not get orientation");
         }
 
