@@ -31,7 +31,7 @@ public class ImgScalrProcessor implements ImageProcessor {
     @Override
     public ProcessedImage process(ImageProcessRequest imageProcessRequest, BufferedImage img) throws IOException {
         //BufferedImage img = ImageIO.read(imageProcessRequest.file);
-        Logger.trace(img.toString() + "\n" + img.getColorModel().toString());
+        //Logger.trace(img.toString() + "\n" + img.getColorModel().toString());
 
         if(img.getColorModel().hasAlpha() && imageProcessRequest.preset.format == FileFormat.JPG) {
             // Perform PNG -> JPG alpha fix
